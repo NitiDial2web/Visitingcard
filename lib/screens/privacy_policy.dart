@@ -5,6 +5,7 @@ import 'package:visiting_card/common/AppButtons.dart';
 import 'package:visiting_card/common/AppColors.dart';
 import 'package:visiting_card/common/AppStrings.dart';
 import 'package:visiting_card/models/demo_model.dart';
+import 'package:visiting_card/models/get_privacy_policy.dart';
 import 'package:visiting_card/screens/app_store.dart';
 
 class PrivacyPolicyPage extends StatefulWidget {
@@ -15,6 +16,7 @@ class PrivacyPolicyPage extends StatefulWidget {
 }
 
 class _PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
+  String _description = '';
 
   @override
   void initState(){
@@ -22,22 +24,38 @@ class _PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
     privacyPolicy();
   }
 
-  Future<List<AutoGenerate>?> privacyPolicy() async {
-    print('privacyPolicy');
+  Future<GetPrivacyPolicy?> privacyPolicy() async {
+    // preferences = await SharedPreferences.getInstance();
     try {
-      // var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.usersEndpoint);
-      var response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1'));
-      var data = json.decode(response.body);
-      print('DATA11: $data');
-      print('response.statusCode${response.statusCode}');
+      final response = await http.get(Uri.parse(AppStrings.kGetPrivacyPolicyUrl),
+        // body: {"users_id": preferences.getString(AppStrings.kPrefUserIdKey)}
+      );
+
+      var responseData = jsonDecode(response.body);
+      print('response images  $responseData');
+      print('response.statusCode:${response.statusCode}');
       if (response.statusCode == 200) {
-        print('DATA: $data');
-        // List<AutoGenerate> _model = userModelFromJson(response.body);
-        // return _model;
+        if (responseData['success'] == 1) {
+          var _usersData = responseData['data'];
+          print(_usersData);
+          setState(() {
+            _description = _usersData[0]['description'];
+            // _subscriptionExpired = _usersData[0]['subscription_expired'];
+            // _subscriptionType = _usersData[0]['subscription_type'];
+          });
+          print('_description:$_description');
+          return GetPrivacyPolicy.fromJson(responseData);
+        } else {
+          print("else responseData['status'] :${responseData['status']}");
+          // AppCommon.showToast(responseData["message"]);
+        }
+      } else {
+        throw Exception('Failed to load data');
       }
-    } catch (e) {
-      print(e.toString());
+    } catch (exception) {
+      print('exception getHomeImages $exception');
     }
+    return null;
   }
 
   @override

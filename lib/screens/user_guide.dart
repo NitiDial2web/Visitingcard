@@ -1,8 +1,11 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:visiting_card/common/AppButtons.dart';
 import 'package:visiting_card/common/AppColors.dart';
 import 'package:visiting_card/common/AppStrings.dart';
+import 'package:visiting_card/models/get_user_guide.dart';
 import 'package:visiting_card/screens/app_store.dart';
 
 class UserGuidePage extends StatefulWidget {
@@ -15,6 +18,53 @@ class UserGuidePage extends StatefulWidget {
 class _UserGuidePageState extends State<UserGuidePage> {
   int currentPos = 0;
   List<int> list = [1, 2, 3, 4, 5];
+  List<String> _images = [];
+
+  @override
+  void initState(){
+    super.initState();
+    getUsers();
+  }
+
+  Future<GetUserGuideModel?> getUsers() async {
+    // preferences = await SharedPreferences.getInstance();
+    try {
+      final response = await http.get(Uri.parse(AppStrings.kGetUserGuideUrl),
+        // body: {"users_id": preferences.getString(AppStrings.kPrefUserIdKey)}
+      );
+
+      // var responseData = jsonDecode(response.body);
+      var responseData = json.decode(response.body);
+      print('response images  $responseData');
+      print('response.statusCode:${response.statusCode}');
+      if (response.statusCode == 200) {
+        print("test1");
+        if (responseData['success'] == 1) {
+          var _usersData = responseData['data'];
+          print('_usersData:$_usersData');
+          print(responseData['data'].length);
+          setState(() {
+            for(int i = 0; i<_usersData.length;i++){
+              _images.add(_usersData[i]['image']);
+            }
+            print('_images :$_images');
+          });
+          print('niti');
+          print(_usersData);
+          return GetUserGuideModel.fromJson(responseData);
+        } else {
+          print("else responseData['status'] :${responseData['status']}");
+          // AppCommon.showToast(responseData["message"]);
+        }
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (exception) {
+      print('exception getHomeImages $exception');
+    }
+    // return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +123,7 @@ class _UserGuidePageState extends State<UserGuidePage> {
                       });
                     }
                 ),
-                items: list
+                items: _images
                     .map((item) => Padding(
                   padding: const EdgeInsets.only(left: 25,right: 25,top: 40,bottom: 20),
                   child: Center(
@@ -99,8 +149,8 @@ class _UserGuidePageState extends State<UserGuidePage> {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: list.map((url) {
-                int index = list.indexOf(url);
+              children: _images.map((url) {
+                int index = _images.indexOf(url);
                 return Container(
                   width: (currentPos == index)?15:10,
                   height: (currentPos == index)?15:10,

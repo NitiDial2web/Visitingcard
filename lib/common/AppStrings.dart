@@ -28,4 +28,13 @@ class AppStrings{
 
   //About Us Page
   static const kReserved = 'All right reserved 2018.';
+
+  //Api
+  static const String kBaseUrl = 'https://visitmysite.in/visitingcard/public';
+  static const String kGetVideoUrl = '$kBaseUrl/getvideo';
+  static const String kGetMoreAppsUrl = '$kBaseUrl/getmore_apps';
+  static const String kGetShareUsUrl = '$kBaseUrl/getshare_us';
+  static const String kGetAboutUsUrl = '$kBaseUrl/getabout_us';
+  static const String kGetPrivacyPolicyUrl = '$kBaseUrl/getprivacy_policy';
+  static const String kGetUserGuideUrl = '$kBaseUrl/getuser_guide';
 }

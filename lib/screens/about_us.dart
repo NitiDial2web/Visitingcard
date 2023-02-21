@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:visiting_card/common/AppButtons.dart';
 import 'package:visiting_card/common/AppColors.dart';
 import 'package:visiting_card/common/AppStrings.dart';
+import 'package:visiting_card/models/about_us.dart';
 import 'package:visiting_card/models/demo_model.dart';
 import 'package:visiting_card/screens/app_store.dart';
 
@@ -15,7 +16,7 @@ class AboutUsPage extends StatefulWidget {
 }
 
 class _AboutUsPageState extends State<AboutUsPage> {
-  String email = 'Info@gmail.com';
+  String email = '';
 
   @override
   void initState(){
@@ -23,22 +24,34 @@ class _AboutUsPageState extends State<AboutUsPage> {
     aboutUs();
   }
 
-  Future<List<AutoGenerate>?> aboutUs() async {
-    print('getUsers');
+  Future<GetAboutUsModel?> aboutUs() async {
+    // preferences = await SharedPreferences.getInstance();
     try {
-      // var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.usersEndpoint);
-      var response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1'));
-      var data = json.decode(response.body);
-      print('DATA11: $data');
-      print('response.statusCode${response.statusCode}');
+      final response = await http.get(Uri.parse(AppStrings.kGetAboutUsUrl),
+        // body: {"users_id": preferences.getString(AppStrings.kPrefUserIdKey)}
+      );
+
+      var responseData = jsonDecode(response.body);
+      print('response images  $responseData');
+      print('response.statusCode:${response.statusCode}');
       if (response.statusCode == 200) {
-        print('DATA: $data');
-        // List<AutoGenerate> _model = userModelFromJson(response.body);
-        // return _model;
+        if (responseData['success'] == 1) {
+          var _usersData = responseData['data'];
+          setState(() {
+            email = _usersData[0]['description'];
+          });
+          print(email);
+          return GetAboutUsModel.fromJson(responseData);
+        } else {
+          // AppCommon.showToast(responseData["message"]);
+        }
+      } else {
+        throw Exception('Failed to load data');
       }
-    } catch (e) {
-      print(e.toString());
+    } catch (exception) {
+      print('exception getHomeImages $exception');
     }
+    return null;
   }
 
   @override

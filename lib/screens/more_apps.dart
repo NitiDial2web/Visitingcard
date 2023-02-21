@@ -1,8 +1,12 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:visiting_card/common/AppButtons.dart';
 import 'package:visiting_card/common/AppColors.dart';
 import 'package:visiting_card/common/AppStrings.dart';
+import 'package:visiting_card/models/more_apps.dart';
 import 'package:visiting_card/screens/app_store.dart';
 
 class MoreAppsPage extends StatefulWidget {
@@ -13,6 +17,55 @@ class MoreAppsPage extends StatefulWidget {
 }
 
 class _MoreAppsPageState extends State<MoreAppsPage> {
+  _launchDeveloperPage() async {
+    const url =
+        'https://play.google.com/store/apps/developer?id=4647998716943242763';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  Future<GetMoreAppsModel?> getMoreApps() async {
+    // preferences = await SharedPreferences.getInstance();
+    try {
+      final response = await http.post(Uri.parse(AppStrings.kGetShareUsUrl),
+        // body: {"users_id": preferences.getString(AppStrings.kPrefUserIdKey)}
+      );
+
+      var responseData = jsonDecode(response.body);
+      print('response images  $responseData');
+      print('response.statusCode:${response.statusCode}');
+      if (response.statusCode == 200) {
+        if (responseData['status'] == true) {
+          var _usersData = responseData['data'];
+          setState(() {
+            // _subscriptionStatus = _usersData[0]['subscription_status'];
+            // _subscriptionExpired = _usersData[0]['subscription_expired'];
+            // _subscriptionType = _usersData[0]['subscription_type'];
+          });
+          // print(_subscriptionStatus);
+          return GetMoreAppsModel.fromJson(responseData);
+        } else {
+          print("else responseData['status'] :${responseData['status']}");
+          // AppCommon.showToast(responseData["message"]);
+        }
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (exception) {
+      print('exception getHomeImages $exception');
+    }
+    return null;
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    getMoreApps();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +101,16 @@ class _MoreAppsPageState extends State<MoreAppsPage> {
       ),
       body: Center(
         // child: FaIcon(FontAwesomeIcons.googlePlay,size: 200,),
-        child: Image.asset('assets/images/google-play.png',width: 250,height: 250,),
+        child: GestureDetector(
+            onTap: (){
+              print('play store');
+              _launchDeveloperPage();
+            },
+            child: Image.asset(
+              'assets/images/google-play.png',
+              width: 250,
+              height: 250,
+            )),
       ),
     );
   }

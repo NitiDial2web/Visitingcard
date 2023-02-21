@@ -75,7 +75,7 @@ class _AppsStorePageState extends State<AppsStorePage> {
               padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 15),
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                height: 150,
+                height: 130,
                 decoration: const BoxDecoration(
                     color: AppColors.koffWhite,
                     // gradient: LinearGradient(
@@ -100,8 +100,8 @@ class _AppsStorePageState extends State<AppsStorePage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-                        width: 90,
-                        height: 90,
+                        width: 80,
+                        height: 80,
                         decoration: const BoxDecoration(
                             color: AppColors.kLightGrey,
                             borderRadius: BorderRadius.all(Radius.circular(20))
@@ -113,9 +113,9 @@ class _AppsStorePageState extends State<AppsStorePage> {
                         child: Column(
                           children: [
                             const SizedBox(height: 20,),
-                            AppButtons().kTextNormal(title: 'Application Name', fontSize: 17, fontWeight: FontWeight.w400, fontColor: AppColors.kBlack),
+                            AppButtons().kTextNormal(title: 'Application Name', fontSize: 15, fontWeight: FontWeight.w400, fontColor: AppColors.kBlack),
                             const SizedBox(height: 10,),
-                            AppButtons().kTextNormal(title: 'Make your own flyer with templates.', fontSize: 15, fontWeight: FontWeight.w400, fontColor: AppColors.kDarkGrey)
+                            AppButtons().kTextNormal(title: 'Make your own flyer with templates.', fontSize: 13, fontWeight: FontWeight.w400, fontColor: AppColors.kDarkGrey)
                           ],
                         ),
                       ),
@@ -134,8 +134,8 @@ class _AppsStorePageState extends State<AppsStorePage> {
                                 print('submit');
                               },
                               child: const SizedBox(
-                                width: 70,
-                                height: 45,
+                                width: 50,
+                                height: 30,
                                 child: Center(
                                   child: Text(
                                     'INSTALL',
@@ -143,7 +143,7 @@ class _AppsStorePageState extends State<AppsStorePage> {
                                         color: AppColors.kWhite,
                                         fontFamily: 'Inter-Regular',
                                         fontWeight: FontWeight.normal,
-                                        fontSize: 17),
+                                        fontSize: 12),
                                   ),
                                 ),
                               )),
