@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:visiting_card/screens/blank_page.dart';
 import 'package:visiting_card/screens/home_page.dart';
+import 'package:visiting_card/screens/new_home_page.dart';
 
 class SplashScreenView extends StatefulWidget {
   const SplashScreenView({Key? key}) : super(key: key);
@@ -31,7 +32,7 @@ class _SplashScreenViewState extends State<SplashScreenView> {
         const Duration(seconds: 5),
             () => Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(builder: (context) => const NewHomePage()),
         ));
   }
 

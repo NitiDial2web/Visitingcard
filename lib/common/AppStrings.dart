@@ -1,4 +1,21 @@
 class AppStrings{
+  //Home Page
+  static const kMyDesign = 'My Design';
+  static const kArtDesign = 'Art & Design';
+  static const kLandscapes = 'Landscapes';
+  static const kDesignerChoice = 'Designer Choice';
+  static const kModern = 'Modern';
+  static const kPortrait = 'Portrait';
+  static const kNameTitle = 'Name & Title';
+  static const kPhotos = 'Photos';
+  static const kGlossy = 'Glossy';
+  static const kSimple = 'Simple';
+  static const kShop = 'Shop';
+  static const kEntertainment = 'Entertainment';
+  static const kElegant = 'Elegant';
+  static const kBusiness = 'Business';
+  static const kSpecialCards = 'Special Cards';
+
   //Settings Page
   static const kMyAccount = 'MY ACCOUNT';
   static const kPremium = 'All Premium Access';
