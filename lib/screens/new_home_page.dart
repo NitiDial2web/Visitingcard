@@ -4,6 +4,7 @@ import 'package:visiting_card/common/AppButtons.dart';
 import 'package:visiting_card/common/AppColors.dart';
 import 'package:visiting_card/common/AppStrings.dart';
 import 'package:visiting_card/screens/app_store.dart';
+import 'package:visiting_card/screens/create_your_own.dart';
 import 'package:visiting_card/screens/inner_page.dart';
 
 class NewHomePage extends StatefulWidget {
@@ -49,6 +50,86 @@ class _NewHomePageState extends State<NewHomePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              AppButtons().kTextBold(
+                  title: AppStrings.kMyDesign,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                  fontColor: AppColors.kBlack),
+              SizedBox(
+                height: 160,
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 4,
+                    itemBuilder: (_, index) {
+                      return (index !=0)
+                          ?GestureDetector(
+                        onTap: (){
+                          print('object');
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            height: 130,
+                            decoration: const BoxDecoration(
+                              color: Colors.lightBlue,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(15),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.kDarkGrey,
+                                  // offset: Offset(0.0, 0),
+                                  blurRadius: 5,
+                                  // spreadRadius: 0.0,
+                                ), //BoxShadow
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                          :GestureDetector(
+                        onTap: (){
+                          print('object111');
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const CreateYourOwnPage()));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            width: 200,
+                            height: 200,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(15),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.kDarkGrey,
+                                  // offset: Offset(0.0, 0),
+                                  blurRadius: 5,
+                                  // spreadRadius: 0.0,
+                                ), //BoxShadow
+                              ],
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              // crossAxisAlignment: CrossAxisAlignment.center,
+                              children: const [
+                                FaIcon(FontAwesomeIcons.add),
+                                SizedBox(height: 10,),
+                                Text('Create Your Own',
+                                  style: TextStyle(
+                                      fontSize: 20
+                                  ),)
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+              ),
               AppButtons().kHomeCategory(title: AppStrings.kMyDesign, context: context,onTap: (){
                 print('see more');
               },onTap1: (){
@@ -75,11 +156,24 @@ class _NewHomePageState extends State<NewHomePage> {
               },onTap1: (){
                 print(AppStrings.kModern);
               }),
-              AppButtons().kTextBold(
-                  title: AppStrings.kPortrait,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  fontColor: AppColors.kBlack),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  AppButtons().kTextBold(
+                      title: AppStrings.kPortrait,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      fontColor: AppColors.kBlack),
+                  TextButton(
+                      onPressed: () {
+                        print('see more');
+                      },
+                      child: const Text(
+                        'See more',
+                        style: TextStyle(color: AppColors.kBlack,decoration: TextDecoration.underline),
+                      ))
+                ],
+              ),
               SizedBox(
                 height: 250,
                 child: ListView.builder(

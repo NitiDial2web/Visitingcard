@@ -16,6 +16,10 @@ class AppStrings{
   static const kBusiness = 'Business';
   static const kSpecialCards = 'Special Cards';
 
+  //Create Your Own page
+  static const kWhatYouNeed = 'What do you need?';
+
+
   //Settings Page
   static const kMyAccount = 'MY ACCOUNT';
   static const kPremium = 'All Premium Access';
