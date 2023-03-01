@@ -104,43 +104,43 @@ class _CreateYourOwnPageState extends State<CreateYourOwnPage> {
     const StaggeredTile.count(2, 1),
     const StaggeredTile.count(2, 1.2),
     const StaggeredTile.count(2, 2),
-    const StaggeredTile.count(2, 2.4),
-    const StaggeredTile.count(2, 1.3),
-    const StaggeredTile.count(2, 2.8),
-    const StaggeredTile.count(2, 2),
-    const StaggeredTile.count(2, 2.3),
-    const StaggeredTile.count(2, 3),
+    const StaggeredTile.count(2, 1.2),
+    const StaggeredTile.count(2, 0.6),
+    const StaggeredTile.count(2, 1.5),
     const StaggeredTile.count(2, 3.5),
-    const StaggeredTile.count(2, 1),
+    const StaggeredTile.count(2, 1.2),
     const StaggeredTile.count(2, 1.2),
     const StaggeredTile.count(2, 3.5),
-    const StaggeredTile.count(2, 1),
+    const StaggeredTile.count(2, 1.8),
+    const StaggeredTile.count(2, 1.2),
+    const StaggeredTile.count(2, 2.5),
+    const StaggeredTile.count(2, 2.5),
     const StaggeredTile.count(2, 1.2),
   ];
-  List<Widget> _tiles = const <Widget>[
-    const _Example01Tile(Colors.green, 'Custom Size'),
-    const _Example01Tile(Colors.lightBlue, 'Standard Portrait'),
-    const _Example01Tile(Colors.amber, 'Standard Landscape'),
-    const _Example01Tile(Colors.brown, 'Instagram Portrait'),
-    const _Example01Tile(Colors.deepOrange, 'Instagram Square'),
-    const _Example01Tile(Colors.indigo, 'Pinterest Post'),
-    const _Example01Tile(Colors.red, 'Instagram Story'),
-    const _Example01Tile(Colors.pink, 'Snapchat Geofilter'),
-    const _Example01Tile(Colors.purple, 'Cover 3:1'),
-    const _Example01Tile(Colors.blue, 'Twitter Post'),
-    const _Example01Tile(Colors.green, 'Custom Size'),
-    const _Example01Tile(Colors.lightBlue, 'Standard Portrait'),
-    const _Example01Tile(Colors.amber, 'Standard Landscape'),
-    const _Example01Tile(Colors.brown, 'Instagram Portrait'),
-    const _Example01Tile(Colors.deepOrange, 'Instagram Square'),
-    const _Example01Tile(Colors.indigo, 'Pinterest Post'),
-    const _Example01Tile(Colors.red, 'Instagram Story'),
-    const _Example01Tile(Colors.pink, 'Snapchat Geofilter'),
-    const _Example01Tile(Colors.purple, 'Cover 3:1'),
-    const _Example01Tile(Colors.blue, 'Twitter Post'),
-    const _Example01Tile(Colors.pink, 'Snapchat Geofilter'),
-    const _Example01Tile(Colors.purple, 'Cover 3:1'),
-    const _Example01Tile(Colors.blue, 'Twitter Post'),
+  List<Widget> _tiles =  <Widget>[
+     _Example01Tile(Colors.green, 'Custom Size'),
+     _Example01Tile(Colors.lightBlue, 'Standard Portrait'),
+     _Example01Tile(Colors.amber, 'Standard Landscape'),
+     _Example01Tile(Colors.brown, 'Instagram Portrait'),
+     _Example01Tile(Colors.deepOrange, 'Instagram Square'),
+     _Example01Tile(Colors.indigo, 'Pinterest Post'),
+     _Example01Tile(Colors.red, 'Instagram Story'),
+     _Example01Tile(Colors.pink, 'Snapchat Geofilter'),
+     _Example01Tile(Colors.purple, 'Cover 3:1'),
+     _Example01Tile(Colors.blue, 'Twitter Post'),
+     _Example01Tile(Colors.green, 'Facebook Square'),
+     _Example01Tile(Colors.lightBlue, 'Thumbnail'),
+     _Example01Tile(Colors.amber, 'Background'),
+     _Example01Tile(Colors.brown, 'Cover 16:9'),
+     _Example01Tile(Colors.deepOrange, '1:2'),
+     _Example01Tile(Colors.indigo, 'Cinematic 16:9'),
+     _Example01Tile(Colors.red, 'Cover Photo 16:9'),
+     _Example01Tile(Colors.pink, 'Cover Image 16:9'),
+     _Example01Tile(Colors.purple, '9:16'),
+     _Example01Tile(Colors.blue, '3:4'),
+     _Example01Tile(Colors.pink, '3:2'),
+     _Example01Tile(Colors.purple, '5:4'),
+     _Example01Tile(Colors.blue, '16:9'),
   ];
 
   @override
@@ -275,7 +275,7 @@ class _CreateYourOwnPageState extends State<CreateYourOwnPage> {
 }
 
 class _Example01Tile extends StatelessWidget {
-  const _Example01Tile(this.backgroundColor, this.title);
+  _Example01Tile(this.backgroundColor, this.title);
 
   final Color backgroundColor;
   final String title;
@@ -293,6 +293,66 @@ class _Example01Tile extends StatelessWidget {
             padding: const EdgeInsets.all(4.0),
             child: new Text(title),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Example02Tile extends StatelessWidget {
+  _Example02Tile(this.backgroundColor, this.title, this.icon, this.subtitle);
+
+  final Color backgroundColor;
+  final IconData icon;
+  final String title;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return new Card(
+      color: backgroundColor,
+      child: new InkWell(
+        onTap: () {
+          print('object');
+        },
+        child: new Column(
+          children: [
+            Icon(icon),
+            Text(title),
+            Text(subtitle)
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Example03Tile extends StatelessWidget {
+  _Example03Tile(this.backgroundColor, this.title, this.icon, this.subtitle);
+
+  final Color backgroundColor;
+  final IconData icon;
+  final String title;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return new Card(
+      color: backgroundColor,
+      child: new InkWell(
+        onTap: () {
+          print('object');
+        },
+        child: new Row(
+          children: [
+            Icon(icon),
+            Column(
+              children: [
+                Text(title),
+                Text(subtitle)
+              ],
+            ),
+          ],
         ),
       ),
     );
