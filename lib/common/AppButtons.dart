@@ -34,11 +34,14 @@ class AppButtons {
         ));
   }
 
-  Widget kHomeCategory(
-      {required String title,
-      required BuildContext context,
-      required Function() onTap1,
-        required Function() onTap}) {
+  Widget kHomeCategory({
+    required String title,
+    required BuildContext context,
+    required Function() onTap1,
+    required Function() onTap,
+    // String? image,
+    // int length = 4,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -56,7 +59,9 @@ class AppButtons {
                 },
                 child: const Text(
                   'See more',
-                  style: TextStyle(color: AppColors.kBlack,decoration: TextDecoration.underline),
+                  style: TextStyle(
+                      color: AppColors.kBlack,
+                      decoration: TextDecoration.underline),
                 ))
           ],
         ),
@@ -70,61 +75,67 @@ class AppButtons {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: (index != 3)
-                    ?GestureDetector(
-                    onTap: onTap1,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      height: 130,
-                      decoration: const BoxDecoration(
-                          color: Colors.lightBlue,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15),
+                      ? GestureDetector(
+                          onTap: onTap1,
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            height: 130,
+                            decoration: BoxDecoration(
+                              color: Colors.lightBlue,
+                              // image: DecorationImage(
+                              //   image: NetworkImage(image!),
+                              //   fit: BoxFit.fill,
+                              // ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(15),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.kDarkGrey,
+                                  // offset: Offset(0.0, 0),
+                                  blurRadius: 5,
+                                  // spreadRadius: 0.0,
+                                ), //BoxShadow
+                              ],
+                            ),
+                            // child: Text('$index'),
                           ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.kDarkGrey,
-                            // offset: Offset(0.0, 0),
-                            blurRadius: 5,
-                            // spreadRadius: 0.0,
-                          ), //BoxShadow
-                        ],
-                      ),
-                      // child: Text('$index'),
-                    ),
-                  )
-                  :GestureDetector(
-                    onTap: onTap,
-                    child: Container(
-                      width: 200,
-                      height: 200,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(15),
+                        )
+                      : GestureDetector(
+                          onTap: onTap,
+                          child: Container(
+                            width: 200,
+                            height: 200,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(15),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.kDarkGrey,
+                                  // offset: Offset(0.0, 0),
+                                  blurRadius: 5,
+                                  // spreadRadius: 0.0,
+                                ), //BoxShadow
+                              ],
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              // crossAxisAlignment: CrossAxisAlignment.center,
+                              children: const [
+                                FaIcon(FontAwesomeIcons.idCard),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  'See More',
+                                  style: TextStyle(fontSize: 25),
+                                )
+                              ],
+                            ),
+                          ),
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.kDarkGrey,
-                            // offset: Offset(0.0, 0),
-                            blurRadius: 5,
-                            // spreadRadius: 0.0,
-                          ), //BoxShadow
-                        ],
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        // crossAxisAlignment: CrossAxisAlignment.center,
-                        children: const [
-                          FaIcon(FontAwesomeIcons.idCard),
-                          SizedBox(height: 10,),
-                          Text('See More',
-                          style: TextStyle(
-                            fontSize: 25
-                          ),)
-                        ],
-                      ),
-                    ),
-                  ),
                 );
               }),
         ),

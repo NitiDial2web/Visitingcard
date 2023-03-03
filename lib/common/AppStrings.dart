@@ -58,4 +58,5 @@ class AppStrings{
   static const String kGetAboutUsUrl = '$kBaseUrl/getabout_us';
   static const String kGetPrivacyPolicyUrl = '$kBaseUrl/getprivacy_policy';
   static const String kGetUserGuideUrl = '$kBaseUrl/getuser_guide';
+  static const String kGetCategoryImageUrl = '$kBaseUrl/getcategory_image';
 }

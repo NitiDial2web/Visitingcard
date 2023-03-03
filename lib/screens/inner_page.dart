@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class InnerPage extends StatefulWidget {
-  const InnerPage({Key? key}) : super(key: key);
+  final String image;
+  const InnerPage({Key? key, required this.image}) : super(key: key);
 
   @override
   State<InnerPage> createState() => _InnerPageState();
@@ -38,12 +39,12 @@ class _InnerPageState extends State<InnerPage> {
                   children: [
                     Padding(
                       padding:
-                      EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
                       child: GestureDetector(
                           onTap: () {
                             Navigator.pop(context);
                           },
-                          child: Icon(
+                          child: const Icon(
                             Icons.close,
                             size: 40,
                           )),
@@ -67,9 +68,13 @@ class _InnerPageState extends State<InnerPage> {
                   .size
                   .width * 0.9,
               height: 200,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: Colors.red,
-                borderRadius: BorderRadius.all(
+                image: DecorationImage(
+                    image: NetworkImage(widget.image),
+                    fit: BoxFit.cover,
+                  ),
+                borderRadius: const BorderRadius.all(
                   Radius.circular(15),
                 ),
               ),
