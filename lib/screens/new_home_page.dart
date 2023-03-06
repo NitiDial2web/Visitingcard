@@ -19,7 +19,6 @@ class NewHomePage extends StatefulWidget {
 }
 
 class _NewHomePageState extends State<NewHomePage> {
-
   Future<getCategoryImage?> getcategoryImage() async {
     // preferences = await SharedPreferences.getInstance();
     try {
@@ -35,7 +34,7 @@ class _NewHomePageState extends State<NewHomePage> {
         if (responseData['success'] == 1) {
           var _usersData = responseData['data'];
           // for (int i = 0; i < _usersData.length; i++) {
-            // _videos.add(_usersData[i]['video']);
+          // _videos.add(_usersData[i]['video']);
           // }
           // print('_videos :$_videos');
           return getCategoryImage.fromJson(responseData);
@@ -60,16 +59,21 @@ class _NewHomePageState extends State<NewHomePage> {
       appBar: AppBar(
         // backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(onPressed: (){
-          print('settings');
-        }, icon: const Icon(Icons.settings)),
+        leading: IconButton(
+            onPressed: () {
+              print('settings');
+            },
+            icon: const Icon(Icons.settings)),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: GestureDetector(
-              onTap: (){
+              onTap: () {
                 print('Ads');
-                Navigator.push(context, MaterialPageRoute(builder: (context)=> const AppsStorePage()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AppsStorePage()));
               },
               child: Image.asset(
                 'assets/images/Web_Advertising.png',
@@ -82,12 +86,12 @@ class _NewHomePageState extends State<NewHomePage> {
       ),
       body: FutureBuilder<getCategoryImage?>(
         future: getcategoryImage(),
-        builder: (BuildContext context,AsyncSnapshot<getCategoryImage?> snapshot){
-          if(!snapshot.hasData){
+        builder:
+            (BuildContext context, AsyncSnapshot<getCategoryImage?> snapshot) {
+          if (!snapshot.hasData) {
             print('if');
             return const Center(child: CircularProgressIndicator());
-          }
-          else{
+          } else {
             print("art: ${snapshot.data!.data![1]!.list![1]!.id}");
             print('list: ${snapshot.data!.data![1]!.list}');
             print('category: ${snapshot.data!.data!.length}');
@@ -141,7 +145,7 @@ class _NewHomePageState extends State<NewHomePage> {
                                   )
                                 // : (snapshot.data!.data![0]!.list!.isEmpty)
                                 // ?Container()
-                            :GestureDetector(
+                                : GestureDetector(
                                     onTap: () {
                                       print('object111');
                                       Navigator.push(
@@ -206,7 +210,8 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![1]!.categoryName.toString(),
+                            title: snapshot.data!.data![1]!.categoryName
+                                .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
                             fontColor: AppColors.kBlack),
@@ -214,7 +219,15 @@ class _NewHomePageState extends State<NewHomePage> {
                             onPressed: () {
                               print('see more');
                               print(snapshot.data!.data![1]!.list!.length);
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => CategoriesPage(image: snapshot.data!.data![1]!.list,)));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CategoriesPage(
+                                            image: snapshot
+                                                .data!.data![1]!.list!
+                                                .toList()
+                                                .map((e) => e!.image),
+                                          )));
                             },
                             child: const Text(
                               'See more',
@@ -235,71 +248,96 @@ class _NewHomePageState extends State<NewHomePage> {
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
                                   ? GestureDetector(
-                                onTap: () {
-                                  print('see more1111');
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => InnerPage(image: snapshot.data!.data![1]!.list![index]!.image.toString(),)));
-                                },
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.8,
-                                  height: 130,
-                                  decoration: BoxDecoration(
-                                    color: Colors.lightBlue,
-                                    image: DecorationImage(
-                                      image: NetworkImage(snapshot.data!.data![1]!.list![index]!.image.toString()),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  // child: Text('$index'),
-                                ),
-                              )
-                                  : GestureDetector(
-                                onTap: () {
-                            print('see more');
-                            },
-                                child: Container(
-                                  width: 200,
-                                  height: 200,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    // crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: const [
-                                      FaIcon(FontAwesomeIcons.idCard),
-                                      SizedBox(
-                                        height: 10,
+                                      onTap: () {
+                                        print('see more1111');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => InnerPage(
+                                                      image: snapshot
+                                                          .data!
+                                                          .data![1]!
+                                                          .list![index]!
+                                                          .image
+                                                          .toString(),
+                                                    )));
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.8,
+                                        height: 130,
+                                        decoration: BoxDecoration(
+                                          color: Colors.lightBlue,
+                                          image: DecorationImage(
+                                            image: NetworkImage(snapshot.data!
+                                                .data![1]!.list![index]!.image
+                                                .toString()),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        // child: Text('$index'),
                                       ),
-                                      Text(
-                                        'See More',
-                                        style: TextStyle(fontSize: 25),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () {
+                                        print('see more');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CategoriesPage(
+                                                      image: snapshot
+                                                          .data!.data![1]!.list!
+                                                          .toList()
+                                                          .map((e) => e!.image),
+                                                    )));
+                                      },
+                                      child: Container(
+                                        width: 200,
+                                        height: 200,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          // crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: const [
+                                            FaIcon(FontAwesomeIcons.idCard),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              'See More',
+                                              style: TextStyle(fontSize: 25),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                             );
                           }),
                     ),
@@ -307,112 +345,23 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![2]!.categoryName.toString(),
+                            title: snapshot.data!.data![2]!.categoryName
+                                .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
                             fontColor: AppColors.kBlack),
                         TextButton(
                             onPressed: () {
                               print('see more');
-                            },
-                            child: const Text(
-                              'See more',
-                              style: TextStyle(
-                                  color: AppColors.kBlack,
-                                  decoration: TextDecoration.underline),
-                            ))
-                      ],
-                    ),
-                    SizedBox(
-                      height: 160,
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 4,
-                          itemBuilder: (_, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: (index != 3)
-                                  ? GestureDetector(
-                                onTap: () {
-                                  print('see more1111');
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => InnerPage(image: snapshot.data!.data![2]!.list![index]!.image.toString(),)));
-                                },
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.8,
-                                  height: 130,
-                                  decoration: BoxDecoration(
-                                    color: Colors.lightBlue,
-                                    image: DecorationImage(
-                                      image: NetworkImage(snapshot.data!.data![2]!.list![index]!.image.toString()),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  // child: Text('$index'),
-                                ),
-                              )
-                                  : GestureDetector(
-                                onTap: () {
-                                  print('see more');
-                                },
-                                child: Container(
-                                  width: 200,
-                                  height: 200,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    // crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: const [
-                                      FaIcon(FontAwesomeIcons.idCard),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        'See More',
-                                        style: TextStyle(fontSize: 25),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          }),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        AppButtons().kTextBold(
-                            title: snapshot.data!.data![3]!.categoryName.toString(),
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                            fontColor: AppColors.kBlack),
-                        TextButton(
-                            onPressed: () {
-                              print('see more');
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CategoriesPage(
+                                        image: snapshot
+                                            .data!.data![2]!.list!
+                                            .toList()
+                                            .map((e) => e!.image),
+                                      )));
                             },
                             child: const Text(
                               'See more',
@@ -433,71 +382,95 @@ class _NewHomePageState extends State<NewHomePage> {
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
                                   ? GestureDetector(
-                                onTap: () {
-                                  print('see more1111');
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => InnerPage(image: snapshot.data!.data![3]!.list![index]!.image.toString(),)));
-                                },
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.8,
-                                  height: 130,
-                                  decoration: BoxDecoration(
-                                    color: Colors.lightBlue,
-                                    image: DecorationImage(
-                                      image: NetworkImage(snapshot.data!.data![3]!.list![index]!.image.toString()),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  // child: Text('$index'),
-                                ),
-                              )
-                                  : GestureDetector(
-                                onTap: () {
-                                  print('see more');
-                                },
-                                child: Container(
-                                  width: 200,
-                                  height: 200,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    // crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: const [
-                                      FaIcon(FontAwesomeIcons.idCard),
-                                      SizedBox(
-                                        height: 10,
+                                      onTap: () {
+                                        print('see more1111');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => InnerPage(
+                                                      image: snapshot
+                                                          .data!
+                                                          .data![2]!
+                                                          .list![index]!
+                                                          .image
+                                                          .toString(),
+                                                    )));
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.8,
+                                        height: 130,
+                                        decoration: BoxDecoration(
+                                          color: Colors.lightBlue,
+                                          image: DecorationImage(
+                                            image: NetworkImage(snapshot.data!
+                                                .data![2]!.list![index]!.image
+                                                .toString()),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        // child: Text('$index'),
                                       ),
-                                      Text(
-                                        'See More',
-                                        style: TextStyle(fontSize: 25),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () {
+                                        print('see more');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => CategoriesPage(
+                                                  image: snapshot
+                                                      .data!.data![2]!.list!
+                                                      .toList()
+                                                      .map((e) => e!.image),
+                                                )));
+                                      },
+                                      child: Container(
+                                        width: 200,
+                                        height: 200,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          // crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: const [
+                                            FaIcon(FontAwesomeIcons.idCard),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              'See More',
+                                              style: TextStyle(fontSize: 25),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                             );
                           }),
                     ),
@@ -505,13 +478,23 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![4]!.categoryName.toString(),
+                            title: snapshot.data!.data![3]!.categoryName
+                                .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
                             fontColor: AppColors.kBlack),
                         TextButton(
                             onPressed: () {
                               print('see more');
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CategoriesPage(
+                                        image: snapshot
+                                            .data!.data![3]!.list!
+                                            .toList()
+                                            .map((e) => e!.image),
+                                      )));
                             },
                             child: const Text(
                               'See more',
@@ -532,71 +515,95 @@ class _NewHomePageState extends State<NewHomePage> {
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
                                   ? GestureDetector(
-                                onTap: () {
-                                  print('see more1111');
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => InnerPage(image: snapshot.data!.data![4]!.list![index]!.image.toString(),)));
-                                },
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.8,
-                                  height: 130,
-                                  decoration: BoxDecoration(
-                                    color: Colors.lightBlue,
-                                    image: DecorationImage(
-                                      image: NetworkImage(snapshot.data!.data![4]!.list![index]!.image.toString()),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  // child: Text('$index'),
-                                ),
-                              )
-                                  : GestureDetector(
-                                onTap: () {
-                                  print('see more');
-                                },
-                                child: Container(
-                                  width: 200,
-                                  height: 200,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    // crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: const [
-                                      FaIcon(FontAwesomeIcons.idCard),
-                                      SizedBox(
-                                        height: 10,
+                                      onTap: () {
+                                        print('see more1111');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => InnerPage(
+                                                      image: snapshot
+                                                          .data!
+                                                          .data![3]!
+                                                          .list![index]!
+                                                          .image
+                                                          .toString(),
+                                                    )));
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.8,
+                                        height: 130,
+                                        decoration: BoxDecoration(
+                                          color: Colors.lightBlue,
+                                          image: DecorationImage(
+                                            image: NetworkImage(snapshot.data!
+                                                .data![3]!.list![index]!.image
+                                                .toString()),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        // child: Text('$index'),
                                       ),
-                                      Text(
-                                        'See More',
-                                        style: TextStyle(fontSize: 25),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () {
+                                        print('see more');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => CategoriesPage(
+                                                  image: snapshot
+                                                      .data!.data![3]!.list!
+                                                      .toList()
+                                                      .map((e) => e!.image),
+                                                )));
+                                      },
+                                      child: Container(
+                                        width: 200,
+                                        height: 200,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          // crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: const [
+                                            FaIcon(FontAwesomeIcons.idCard),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              'See More',
+                                              style: TextStyle(fontSize: 25),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                             );
                           }),
                     ),
@@ -604,13 +611,157 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![5]!.categoryName.toString(),
+                            title: snapshot.data!.data![4]!.categoryName
+                                .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
                             fontColor: AppColors.kBlack),
                         TextButton(
                             onPressed: () {
                               print('see more');
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CategoriesPage(
+                                        image: snapshot
+                                            .data!.data![4]!.list!
+                                            .toList()
+                                            .map((e) => e!.image),
+                                      )));
+                            },
+                            child: const Text(
+                              'See more',
+                              style: TextStyle(
+                                  color: AppColors.kBlack,
+                                  decoration: TextDecoration.underline),
+                            ))
+                      ],
+                    ),
+                    SizedBox(
+                      height: 160,
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 4,
+                          itemBuilder: (_, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: (index != 3)
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        print('see more1111');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => InnerPage(
+                                                      image: snapshot
+                                                          .data!
+                                                          .data![4]!
+                                                          .list![index]!
+                                                          .image
+                                                          .toString(),
+                                                    )));
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.8,
+                                        height: 130,
+                                        decoration: BoxDecoration(
+                                          color: Colors.lightBlue,
+                                          image: DecorationImage(
+                                            image: NetworkImage(snapshot.data!
+                                                .data![4]!.list![index]!.image
+                                                .toString()),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        // child: Text('$index'),
+                                      ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () {
+                                        print('see more');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => CategoriesPage(
+                                                  image: snapshot
+                                                      .data!.data![4]!.list!
+                                                      .toList()
+                                                      .map((e) => e!.image),
+                                                )));
+                                      },
+                                      child: Container(
+                                        width: 200,
+                                        height: 200,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          // crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: const [
+                                            FaIcon(FontAwesomeIcons.idCard),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              'See More',
+                                              style: TextStyle(fontSize: 25),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                            );
+                          }),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        AppButtons().kTextBold(
+                            title: snapshot.data!.data![5]!.categoryName
+                                .toString(),
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            fontColor: AppColors.kBlack),
+                        TextButton(
+                            onPressed: () {
+                              print('see more');
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CategoriesPage(
+                                        image: snapshot
+                                            .data!.data![5]!.list!
+                                            .toList()
+                                            .map((e) => e!.image),
+                                        portrait: true,
+                                      )));
                             },
                             child: const Text(
                               'See more',
@@ -631,71 +782,96 @@ class _NewHomePageState extends State<NewHomePage> {
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
                                   ? GestureDetector(
-                                onTap: () {
-                                  print('see more1111');
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => InnerPage(image: snapshot.data!.data![5]!.list![index]!.image.toString(),)));
-                                },
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.4,
-                                  height: 130,
-                                  decoration: BoxDecoration(
-                                    color: Colors.lightBlue,
-                                    image: DecorationImage(
-                                      image: NetworkImage(snapshot.data!.data![5]!.list![index]!.image.toString()),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  // child: Text('$index'),
-                                ),
-                              )
-                                  : GestureDetector(
-                                onTap: () {
-                                  print('see more');
-                                },
-                                child: Container(
-                                  width: 200,
-                                  height: 200,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    // crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: const [
-                                      FaIcon(FontAwesomeIcons.idCard),
-                                      SizedBox(
-                                        height: 10,
+                                      onTap: () {
+                                        print('see more1111');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => InnerPage(
+                                                      image: snapshot
+                                                          .data!
+                                                          .data![5]!
+                                                          .list![index]!
+                                                          .image
+                                                          .toString(),
+                                                    )));
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.4,
+                                        height: 130,
+                                        decoration: BoxDecoration(
+                                          color: Colors.lightBlue,
+                                          image: DecorationImage(
+                                            image: NetworkImage(snapshot.data!
+                                                .data![5]!.list![index]!.image
+                                                .toString()),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        // child: Text('$index'),
                                       ),
-                                      Text(
-                                        'See More',
-                                        style: TextStyle(fontSize: 25),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () {
+                                        print('see more');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => CategoriesPage(
+                                                  image: snapshot
+                                                      .data!.data![5]!.list!
+                                                      .toList()
+                                                      .map((e) => e!.image,),
+                                                    portrait:true
+                                                )));
+                                      },
+                                      child: Container(
+                                        width: 200,
+                                        height: 200,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          // crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: const [
+                                            FaIcon(FontAwesomeIcons.idCard),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              'See More',
+                                              style: TextStyle(fontSize: 25),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                             );
                           }),
                     ),
@@ -703,7 +879,8 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![6]!.categoryName.toString(),
+                            title: snapshot.data!.data![6]!.categoryName
+                                .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
                             fontColor: AppColors.kBlack),
@@ -730,71 +907,86 @@ class _NewHomePageState extends State<NewHomePage> {
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
                                   ? GestureDetector(
-                                onTap: () {
-                                  print('see more1111');
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => InnerPage(image: snapshot.data!.data![6]!.list![index]!.image.toString(),)));
-                                },
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.8,
-                                  height: 130,
-                                  decoration: BoxDecoration(
-                                    color: Colors.lightBlue,
-                                    image: DecorationImage(
-                                      image: NetworkImage(snapshot.data!.data![6]!.list![index]!.image.toString()),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  // child: Text('$index'),
-                                ),
-                              )
-                                  : GestureDetector(
-                                onTap: () {
-                                  print('see more');
-                                },
-                                child: Container(
-                                  width: 200,
-                                  height: 200,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    // crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: const [
-                                      FaIcon(FontAwesomeIcons.idCard),
-                                      SizedBox(
-                                        height: 10,
+                                      onTap: () {
+                                        print('see more1111');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => InnerPage(
+                                                      image: snapshot
+                                                          .data!
+                                                          .data![6]!
+                                                          .list![index]!
+                                                          .image
+                                                          .toString(),
+                                                    )));
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.8,
+                                        height: 130,
+                                        decoration: BoxDecoration(
+                                          color: Colors.lightBlue,
+                                          image: DecorationImage(
+                                            image: NetworkImage(snapshot.data!
+                                                .data![6]!.list![index]!.image
+                                                .toString()),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        // child: Text('$index'),
                                       ),
-                                      Text(
-                                        'See More',
-                                        style: TextStyle(fontSize: 25),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () {
+                                        print('see more');
+                                      },
+                                      child: Container(
+                                        width: 200,
+                                        height: 200,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          // crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: const [
+                                            FaIcon(FontAwesomeIcons.idCard),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              'See More',
+                                              style: TextStyle(fontSize: 25),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                             );
                           }),
                     ),
@@ -802,7 +994,8 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![7]!.categoryName.toString(),
+                            title: snapshot.data!.data![7]!.categoryName
+                                .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
                             fontColor: AppColors.kBlack),
@@ -829,71 +1022,86 @@ class _NewHomePageState extends State<NewHomePage> {
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
                                   ? GestureDetector(
-                                onTap: () {
-                                  print('see more1111');
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => InnerPage(image: snapshot.data!.data![7]!.list![index]!.image.toString(),)));
-                                },
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.8,
-                                  height: 130,
-                                  decoration: BoxDecoration(
-                                    color: Colors.lightBlue,
-                                    image: DecorationImage(
-                                      image: NetworkImage(snapshot.data!.data![7]!.list![index]!.image.toString()),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  // child: Text('$index'),
-                                ),
-                              )
-                                  : GestureDetector(
-                                onTap: () {
-                                  print('see more');
-                                },
-                                child: Container(
-                                  width: 200,
-                                  height: 200,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    // crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: const [
-                                      FaIcon(FontAwesomeIcons.idCard),
-                                      SizedBox(
-                                        height: 10,
+                                      onTap: () {
+                                        print('see more1111');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => InnerPage(
+                                                      image: snapshot
+                                                          .data!
+                                                          .data![7]!
+                                                          .list![index]!
+                                                          .image
+                                                          .toString(),
+                                                    )));
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.8,
+                                        height: 130,
+                                        decoration: BoxDecoration(
+                                          color: Colors.lightBlue,
+                                          image: DecorationImage(
+                                            image: NetworkImage(snapshot.data!
+                                                .data![7]!.list![index]!.image
+                                                .toString()),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        // child: Text('$index'),
                                       ),
-                                      Text(
-                                        'See More',
-                                        style: TextStyle(fontSize: 25),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () {
+                                        print('see more');
+                                      },
+                                      child: Container(
+                                        width: 200,
+                                        height: 200,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          // crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: const [
+                                            FaIcon(FontAwesomeIcons.idCard),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              'See More',
+                                              style: TextStyle(fontSize: 25),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                             );
                           }),
                     ),
@@ -901,7 +1109,8 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![8]!.categoryName.toString(),
+                            title: snapshot.data!.data![8]!.categoryName
+                                .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
                             fontColor: AppColors.kBlack),
@@ -928,71 +1137,86 @@ class _NewHomePageState extends State<NewHomePage> {
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
                                   ? GestureDetector(
-                                onTap: () {
-                                  print('see more1111');
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => InnerPage(image: snapshot.data!.data![8]!.list![index]!.image.toString(),)));
-                                },
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.8,
-                                  height: 130,
-                                  decoration: BoxDecoration(
-                                    color: Colors.lightBlue,
-                                    image: DecorationImage(
-                                      image: NetworkImage(snapshot.data!.data![8]!.list![index]!.image.toString()),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  // child: Text('$index'),
-                                ),
-                              )
-                                  : GestureDetector(
-                                onTap: () {
-                                  print('see more');
-                                },
-                                child: Container(
-                                  width: 200,
-                                  height: 200,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    // crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: const [
-                                      FaIcon(FontAwesomeIcons.idCard),
-                                      SizedBox(
-                                        height: 10,
+                                      onTap: () {
+                                        print('see more1111');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => InnerPage(
+                                                      image: snapshot
+                                                          .data!
+                                                          .data![8]!
+                                                          .list![index]!
+                                                          .image
+                                                          .toString(),
+                                                    )));
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.8,
+                                        height: 130,
+                                        decoration: BoxDecoration(
+                                          color: Colors.lightBlue,
+                                          image: DecorationImage(
+                                            image: NetworkImage(snapshot.data!
+                                                .data![8]!.list![index]!.image
+                                                .toString()),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        // child: Text('$index'),
                                       ),
-                                      Text(
-                                        'See More',
-                                        style: TextStyle(fontSize: 25),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () {
+                                        print('see more');
+                                      },
+                                      child: Container(
+                                        width: 200,
+                                        height: 200,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          // crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: const [
+                                            FaIcon(FontAwesomeIcons.idCard),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              'See More',
+                                              style: TextStyle(fontSize: 25),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                             );
                           }),
                     ),
@@ -1000,7 +1224,8 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![9]!.categoryName.toString(),
+                            title: snapshot.data!.data![9]!.categoryName
+                                .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
                             fontColor: AppColors.kBlack),
@@ -1027,71 +1252,86 @@ class _NewHomePageState extends State<NewHomePage> {
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
                                   ? GestureDetector(
-                                onTap: () {
-                                  print('see more1111');
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => InnerPage(image: snapshot.data!.data![9]!.list![index]!.image.toString(),)));
-                                },
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.8,
-                                  height: 130,
-                                  decoration: BoxDecoration(
-                                    color: Colors.lightBlue,
-                                    image: DecorationImage(
-                                      image: NetworkImage(snapshot.data!.data![9]!.list![index]!.image.toString()),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  // child: Text('$index'),
-                                ),
-                              )
-                                  : GestureDetector(
-                                onTap: () {
-                                  print('see more');
-                                },
-                                child: Container(
-                                  width: 200,
-                                  height: 200,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    // crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: const [
-                                      FaIcon(FontAwesomeIcons.idCard),
-                                      SizedBox(
-                                        height: 10,
+                                      onTap: () {
+                                        print('see more1111');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => InnerPage(
+                                                      image: snapshot
+                                                          .data!
+                                                          .data![9]!
+                                                          .list![index]!
+                                                          .image
+                                                          .toString(),
+                                                    )));
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.8,
+                                        height: 130,
+                                        decoration: BoxDecoration(
+                                          color: Colors.lightBlue,
+                                          image: DecorationImage(
+                                            image: NetworkImage(snapshot.data!
+                                                .data![9]!.list![index]!.image
+                                                .toString()),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        // child: Text('$index'),
                                       ),
-                                      Text(
-                                        'See More',
-                                        style: TextStyle(fontSize: 25),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () {
+                                        print('see more');
+                                      },
+                                      child: Container(
+                                        width: 200,
+                                        height: 200,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          // crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: const [
+                                            FaIcon(FontAwesomeIcons.idCard),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              'See More',
+                                              style: TextStyle(fontSize: 25),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                             );
                           }),
                     ),
@@ -1099,7 +1339,8 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![10]!.categoryName.toString(),
+                            title: snapshot.data!.data![10]!.categoryName
+                                .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
                             fontColor: AppColors.kBlack),
@@ -1126,71 +1367,86 @@ class _NewHomePageState extends State<NewHomePage> {
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
                                   ? GestureDetector(
-                                onTap: () {
-                                  print('see more1111');
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => InnerPage(image: snapshot.data!.data![10]!.list![index]!.image.toString(),)));
-                                },
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.8,
-                                  height: 130,
-                                  decoration: BoxDecoration(
-                                    color: Colors.lightBlue,
-                                    image: DecorationImage(
-                                      image: NetworkImage(snapshot.data!.data![10]!.list![index]!.image.toString()),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  // child: Text('$index'),
-                                ),
-                              )
-                                  : GestureDetector(
-                                onTap: () {
-                                  print('see more');
-                                },
-                                child: Container(
-                                  width: 200,
-                                  height: 200,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    // crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: const [
-                                      FaIcon(FontAwesomeIcons.idCard),
-                                      SizedBox(
-                                        height: 10,
+                                      onTap: () {
+                                        print('see more1111');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => InnerPage(
+                                                      image: snapshot
+                                                          .data!
+                                                          .data![10]!
+                                                          .list![index]!
+                                                          .image
+                                                          .toString(),
+                                                    )));
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.8,
+                                        height: 130,
+                                        decoration: BoxDecoration(
+                                          color: Colors.lightBlue,
+                                          image: DecorationImage(
+                                            image: NetworkImage(snapshot.data!
+                                                .data![10]!.list![index]!.image
+                                                .toString()),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        // child: Text('$index'),
                                       ),
-                                      Text(
-                                        'See More',
-                                        style: TextStyle(fontSize: 25),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () {
+                                        print('see more');
+                                      },
+                                      child: Container(
+                                        width: 200,
+                                        height: 200,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          // crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: const [
+                                            FaIcon(FontAwesomeIcons.idCard),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              'See More',
+                                              style: TextStyle(fontSize: 25),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                             );
                           }),
                     ),
@@ -1198,7 +1454,8 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![11]!.categoryName.toString(),
+                            title: snapshot.data!.data![11]!.categoryName
+                                .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
                             fontColor: AppColors.kBlack),
@@ -1225,71 +1482,86 @@ class _NewHomePageState extends State<NewHomePage> {
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
                                   ? GestureDetector(
-                                onTap: () {
-                                  print('see more1111');
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => InnerPage(image: snapshot.data!.data![11]!.list![index]!.image.toString(),)));
-                                },
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.8,
-                                  height: 130,
-                                  decoration: BoxDecoration(
-                                    color: Colors.lightBlue,
-                                    image: DecorationImage(
-                                      image: NetworkImage(snapshot.data!.data![11]!.list![index]!.image.toString()),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  // child: Text('$index'),
-                                ),
-                              )
-                                  : GestureDetector(
-                                onTap: () {
-                                  print('see more');
-                                },
-                                child: Container(
-                                  width: 200,
-                                  height: 200,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    // crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: const [
-                                      FaIcon(FontAwesomeIcons.idCard),
-                                      SizedBox(
-                                        height: 10,
+                                      onTap: () {
+                                        print('see more1111');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => InnerPage(
+                                                      image: snapshot
+                                                          .data!
+                                                          .data![11]!
+                                                          .list![index]!
+                                                          .image
+                                                          .toString(),
+                                                    )));
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.8,
+                                        height: 130,
+                                        decoration: BoxDecoration(
+                                          color: Colors.lightBlue,
+                                          image: DecorationImage(
+                                            image: NetworkImage(snapshot.data!
+                                                .data![11]!.list![index]!.image
+                                                .toString()),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        // child: Text('$index'),
                                       ),
-                                      Text(
-                                        'See More',
-                                        style: TextStyle(fontSize: 25),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () {
+                                        print('see more');
+                                      },
+                                      child: Container(
+                                        width: 200,
+                                        height: 200,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          // crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: const [
+                                            FaIcon(FontAwesomeIcons.idCard),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              'See More',
+                                              style: TextStyle(fontSize: 25),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                             );
                           }),
                     ),
@@ -1297,7 +1569,8 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![12]!.categoryName.toString(),
+                            title: snapshot.data!.data![12]!.categoryName
+                                .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
                             fontColor: AppColors.kBlack),
@@ -1324,71 +1597,86 @@ class _NewHomePageState extends State<NewHomePage> {
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
                                   ? GestureDetector(
-                                onTap: () {
-                                  print('see more1111');
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => InnerPage(image: snapshot.data!.data![12]!.list![index]!.image.toString(),)));
-                                },
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.8,
-                                  height: 130,
-                                  decoration: BoxDecoration(
-                                    color: Colors.lightBlue,
-                                    image: DecorationImage(
-                                      image: NetworkImage(snapshot.data!.data![12]!.list![index]!.image.toString()),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  // child: Text('$index'),
-                                ),
-                              )
-                                  : GestureDetector(
-                                onTap: () {
-                                  print('see more');
-                                },
-                                child: Container(
-                                  width: 200,
-                                  height: 200,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    // crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: const [
-                                      FaIcon(FontAwesomeIcons.idCard),
-                                      SizedBox(
-                                        height: 10,
+                                      onTap: () {
+                                        print('see more1111');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => InnerPage(
+                                                      image: snapshot
+                                                          .data!
+                                                          .data![12]!
+                                                          .list![index]!
+                                                          .image
+                                                          .toString(),
+                                                    )));
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.8,
+                                        height: 130,
+                                        decoration: BoxDecoration(
+                                          color: Colors.lightBlue,
+                                          image: DecorationImage(
+                                            image: NetworkImage(snapshot.data!
+                                                .data![12]!.list![index]!.image
+                                                .toString()),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        // child: Text('$index'),
                                       ),
-                                      Text(
-                                        'See More',
-                                        style: TextStyle(fontSize: 25),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () {
+                                        print('see more');
+                                      },
+                                      child: Container(
+                                        width: 200,
+                                        height: 200,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          // crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: const [
+                                            FaIcon(FontAwesomeIcons.idCard),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              'See More',
+                                              style: TextStyle(fontSize: 25),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                             );
                           }),
                     ),
@@ -1396,7 +1684,8 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![13]!.categoryName.toString(),
+                            title: snapshot.data!.data![13]!.categoryName
+                                .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
                             fontColor: AppColors.kBlack),
@@ -1423,71 +1712,86 @@ class _NewHomePageState extends State<NewHomePage> {
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
                                   ? GestureDetector(
-                                onTap: () {
-                                  print('see more1111');
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => InnerPage(image: snapshot.data!.data![13]!.list![index]!.image.toString(),)));
-                                },
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.8,
-                                  height: 130,
-                                  decoration: BoxDecoration(
-                                    color: Colors.lightBlue,
-                                    image: DecorationImage(
-                                      image: NetworkImage(snapshot.data!.data![13]!.list![index]!.image.toString()),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  // child: Text('$index'),
-                                ),
-                              )
-                                  : GestureDetector(
-                                onTap: () {
-                                  print('see more');
-                                },
-                                child: Container(
-                                  width: 200,
-                                  height: 200,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    // crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: const [
-                                      FaIcon(FontAwesomeIcons.idCard),
-                                      SizedBox(
-                                        height: 10,
+                                      onTap: () {
+                                        print('see more1111');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => InnerPage(
+                                                      image: snapshot
+                                                          .data!
+                                                          .data![13]!
+                                                          .list![index]!
+                                                          .image
+                                                          .toString(),
+                                                    )));
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.8,
+                                        height: 130,
+                                        decoration: BoxDecoration(
+                                          color: Colors.lightBlue,
+                                          image: DecorationImage(
+                                            image: NetworkImage(snapshot.data!
+                                                .data![13]!.list![index]!.image
+                                                .toString()),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        // child: Text('$index'),
                                       ),
-                                      Text(
-                                        'See More',
-                                        style: TextStyle(fontSize: 25),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () {
+                                        print('see more');
+                                      },
+                                      child: Container(
+                                        width: 200,
+                                        height: 200,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          // crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: const [
+                                            FaIcon(FontAwesomeIcons.idCard),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              'See More',
+                                              style: TextStyle(fontSize: 25),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                             );
                           }),
                     ),
@@ -1495,7 +1799,8 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![14]!.categoryName.toString(),
+                            title: snapshot.data!.data![14]!.categoryName
+                                .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
                             fontColor: AppColors.kBlack),
@@ -1522,71 +1827,86 @@ class _NewHomePageState extends State<NewHomePage> {
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
                                   ? GestureDetector(
-                                onTap: () {
-                                  print('see more1111');
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => InnerPage(image: snapshot.data!.data![14]!.list![index]!.image.toString(),)));
-                                },
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.8,
-                                  height: 130,
-                                  decoration: BoxDecoration(
-                                    color: Colors.lightBlue,
-                                    image: DecorationImage(
-                                      image: NetworkImage(snapshot.data!.data![14]!.list![index]!.image.toString()),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  // child: Text('$index'),
-                                ),
-                              )
-                                  : GestureDetector(
-                                onTap: () {
-                                  print('see more');
-                                },
-                                child: Container(
-                                  width: 200,
-                                  height: 200,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.kDarkGrey,
-                                        // offset: Offset(0.0, 0),
-                                        blurRadius: 5,
-                                        // spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    // crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: const [
-                                      FaIcon(FontAwesomeIcons.idCard),
-                                      SizedBox(
-                                        height: 10,
+                                      onTap: () {
+                                        print('see more1111');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => InnerPage(
+                                                      image: snapshot
+                                                          .data!
+                                                          .data![14]!
+                                                          .list![index]!
+                                                          .image
+                                                          .toString(),
+                                                    )));
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.8,
+                                        height: 130,
+                                        decoration: BoxDecoration(
+                                          color: Colors.lightBlue,
+                                          image: DecorationImage(
+                                            image: NetworkImage(snapshot.data!
+                                                .data![14]!.list![index]!.image
+                                                .toString()),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        // child: Text('$index'),
                                       ),
-                                      Text(
-                                        'See More',
-                                        style: TextStyle(fontSize: 25),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () {
+                                        print('see more');
+                                      },
+                                      child: Container(
+                                        width: 200,
+                                        height: 200,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.kDarkGrey,
+                                              // offset: Offset(0.0, 0),
+                                              blurRadius: 5,
+                                              // spreadRadius: 0.0,
+                                            ), //BoxShadow
+                                          ],
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          // crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: const [
+                                            FaIcon(FontAwesomeIcons.idCard),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              'See More',
+                                              style: TextStyle(fontSize: 25),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                             );
                           }),
                     ),

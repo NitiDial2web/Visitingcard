@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class InnerPage extends StatefulWidget {
   final String image;
-  const InnerPage({Key? key, required this.image}) : super(key: key);
+  final bool portrait;
+  const InnerPage({Key? key, required this.image,this.portrait = false}) : super(key: key);
 
   @override
   State<InnerPage> createState() => _InnerPageState();
@@ -72,7 +73,7 @@ class _InnerPageState extends State<InnerPage> {
                 color: Colors.red,
                 image: DecorationImage(
                     image: NetworkImage(widget.image),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                   ),
                 borderRadius: const BorderRadius.all(
                   Radius.circular(15),

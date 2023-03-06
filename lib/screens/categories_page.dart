@@ -5,16 +5,21 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:visiting_card/common/AppColors.dart';
 import 'package:visiting_card/common/AppStrings.dart';
 import 'package:visiting_card/models/get_category_image.dart';
+import 'package:visiting_card/screens/inner_page.dart';
 
 class CategoriesPage extends StatefulWidget {
-  final List? image;
-  const CategoriesPage({Key? key, required this.image}) : super(key: key);
+  final Iterable<String?>? image;
+  final bool portrait;
+
+  const CategoriesPage({Key? key, required this.image, this.portrait = false})
+      : super(key: key);
 
   @override
   State<CategoriesPage> createState() => _CategoriesPageState();
 }
 
 class _CategoriesPageState extends State<CategoriesPage> {
+  List _images = [];
 
   Future<getCategoryImage?> getcategoryImage() async {
     // preferences = await SharedPreferences.getInstance();
@@ -30,10 +35,17 @@ class _CategoriesPageState extends State<CategoriesPage> {
       if (response.statusCode == 200) {
         if (responseData['success'] == 1) {
           var _usersData = responseData['data'];
-          // for (int i = 0; i < _usersData.length; i++) {
-          // _videos.add(_usersData[i]['video']);
+          print('data:$_usersData');
+          print('data length:${_usersData.length}');
+          // for (int i = 0; i < widget.image!.length; i++) {
+          // print('hiii$i ${widget.image!}');
+          widget.image!.forEach((element) {
+            print('niti demo testing$element');
+            _images.add(element);
+          });
+          // _images.add(_usersData[i]['video']);
           // }
-          // print('_videos :$_videos');
+          print('_images :$_images');
           return getCategoryImage.fromJson(responseData);
         } else {
           print("else responseData['status'] :${responseData['status']}");
@@ -47,7 +59,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
     }
     // return null;
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +77,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
             return ListView.builder(
                 shrinkWrap: true,
                 scrollDirection: Axis.vertical,
-                itemCount: 10,
+                itemCount: _images.length,
                 itemBuilder: (_, index) {
                   print('image: ${widget.image!}');
                   return Padding(
@@ -84,10 +96,10 @@ class _CategoriesPageState extends State<CategoriesPage> {
                           height: 130,
                           decoration: BoxDecoration(
                             color: Colors.lightBlue,
-                            // image: DecorationImage(
-                            //   image: NetworkImage(image[index]),
-                            //   fit: BoxFit.cover,
-                            // ),
+                            image: DecorationImage(
+                              image: NetworkImage(_images[index]),
+                              fit: BoxFit.cover,
+                            ),
                             borderRadius: BorderRadius.all(
                               Radius.circular(15),
                             ),
