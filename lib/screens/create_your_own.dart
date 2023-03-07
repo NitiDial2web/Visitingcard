@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:visiting_card/common/AppStrings.dart';
 import 'package:visiting_card/screens/app_store.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:visiting_card/screens/design_create.dart';
 
 class CreateYourOwnPage extends StatefulWidget {
   const CreateYourOwnPage({Key? key}) : super(key: key);
@@ -26,10 +27,10 @@ class _CreateYourOwnPageState extends State<CreateYourOwnPage> {
   ];
   List<Widget> example = [
     Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           color: Colors.pink,
           borderRadius: BorderRadius.all(Radius.circular(12))),
-      child: ClipRRect(
+      child: const ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(12)),
         // child: FadeInImage.memoryNetwork(
         //   placeholder: kTransparentImage, image: imageList[index],fit: BoxFit.cover,),
@@ -37,10 +38,10 @@ class _CreateYourOwnPageState extends State<CreateYourOwnPage> {
       ),
     ),
     Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           color: Colors.orange,
           borderRadius: BorderRadius.all(Radius.circular(12))),
-      child: ClipRRect(
+      child: const ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(12)),
         // child: FadeInImage.memoryNetwork(
         //   placeholder: kTransparentImage, image: imageList[index],fit: BoxFit.cover,),
@@ -48,10 +49,10 @@ class _CreateYourOwnPageState extends State<CreateYourOwnPage> {
       ),
     ),
     Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           color: Colors.red,
           borderRadius: BorderRadius.all(Radius.circular(12))),
-      child: ClipRRect(
+      child: const ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(12)),
         // child: FadeInImage.memoryNetwork(
         //   placeholder: kTransparentImage, image: imageList[index],fit: BoxFit.cover,),
@@ -59,10 +60,10 @@ class _CreateYourOwnPageState extends State<CreateYourOwnPage> {
       ),
     ),
     Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           color: Colors.yellow,
           borderRadius: BorderRadius.all(Radius.circular(12))),
-      child: ClipRRect(
+      child: const ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(12)),
         // child: FadeInImage.memoryNetwork(
         //   placeholder: kTransparentImage, image: imageList[index],fit: BoxFit.cover,),
@@ -70,10 +71,10 @@ class _CreateYourOwnPageState extends State<CreateYourOwnPage> {
       ),
     ),
     Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           color: Colors.pink,
           borderRadius: BorderRadius.all(Radius.circular(12))),
-      child: ClipRRect(
+      child: const ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(12)),
         // child: FadeInImage.memoryNetwork(
         //   placeholder: kTransparentImage, image: imageList[index],fit: BoxFit.cover,),
@@ -81,10 +82,10 @@ class _CreateYourOwnPageState extends State<CreateYourOwnPage> {
       ),
     ),
     Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           color: Colors.pink,
           borderRadius: BorderRadius.all(Radius.circular(12))),
-      child: ClipRRect(
+      child: const ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(12)),
         // child: FadeInImage.memoryNetwork(
         //   placeholder: kTransparentImage, image: imageList[index],fit: BoxFit.cover,),
@@ -289,6 +290,7 @@ class _Example01Tile extends StatelessWidget {
       child: new InkWell(
         onTap: () {
           print('object');
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const DesignCreate()));
         },
         child: new Center(
           child: new Padding(

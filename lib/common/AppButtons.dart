@@ -172,4 +172,30 @@ class AppButtons {
           fontFamily: 'Inter-Bold'),
     );
   }
+
+  Widget kTextwithIcon({
+    required IconData icon,
+    required String title,
+    required Function() onTap
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Column(
+          children: [
+            FaIcon(icon),
+            Text(
+              title,
+              style: const TextStyle(
+                  color: AppColors.kBlack,
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'Inter-Regular'),
+            )
+          ],
+        ),
+      ),
+    );
+  }
 }
