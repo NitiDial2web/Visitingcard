@@ -53,6 +53,9 @@ class AppStrings{
   //Design Create Page
   static const kAddText = 'Add Text';
 
+  //Preferences
+  static const ktempImage = 'tempImage';
+
   //Api
   static const String kGetCategoryImageUrl = '$kBaseUrl/getcategory_image';
   static const String kBaseUrl = 'https://visitmysite.in/visitingcard/public';

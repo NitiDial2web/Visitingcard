@@ -10,6 +10,7 @@ import 'package:visiting_card/screens/app_store.dart';
 import 'package:visiting_card/screens/categories_page.dart';
 import 'package:visiting_card/screens/create_your_own.dart';
 import 'package:visiting_card/screens/inner_page.dart';
+import 'package:visiting_card/screens/settings_page.dart';
 
 class NewHomePage extends StatefulWidget {
   const NewHomePage({Key? key}) : super(key: key);
@@ -62,6 +63,7 @@ class _NewHomePageState extends State<NewHomePage> {
         leading: IconButton(
             onPressed: () {
               print('settings');
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> const SettingsPage()));
             },
             icon: const Icon(Icons.settings)),
         actions: [
@@ -260,6 +262,15 @@ class _NewHomePageState extends State<NewHomePage> {
                                                           .list![index]!
                                                           .image
                                                           .toString(),
+                                                  category: snapshot
+                                                      .data!
+                                                      .data![1]!
+                                                      .categoryName,
+                                                  filename: snapshot
+                                                      .data!
+                                                      .data![1]!
+                                                      .list![index]!
+                                                      .filename,
                                                     )));
                                       },
                                       child: Container(
@@ -394,6 +405,15 @@ class _NewHomePageState extends State<NewHomePage> {
                                                           .list![index]!
                                                           .image
                                                           .toString(),
+                                                  category: snapshot
+                                                      .data!
+                                                      .data![2]!
+                                                      .categoryName,
+                                                  filename: snapshot
+                                                      .data!
+                                                      .data![2]!
+                                                      .list![index]!
+                                                      .filename,
                                                     )));
                                       },
                                       child: Container(

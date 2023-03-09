@@ -8,6 +8,7 @@ import 'package:visiting_card/common/AppStrings.dart';
 import 'package:visiting_card/models/demo_model.dart';
 import 'package:visiting_card/models/tutorial_video.dart';
 import 'package:visiting_card/screens/app_store.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class TutorialVideoPage extends StatefulWidget {
   const TutorialVideoPage({Key? key}) : super(key: key);
@@ -108,7 +109,7 @@ class _TutorialVideoPageState extends State<TutorialVideoPage> {
       body: FutureBuilder<GetVideoModel?>(
           future: tutorial(),
           builder: (BuildContext context,AsyncSnapshot<GetVideoModel?> snapshot) {
-            print('niti1111:${snapshot.data!.data.first.video}');
+            // print('niti1111:${snapshot.data!.data.first.video}');
             // print('snapshot.connectionState:${snapshot.connectionState}');
             // if(snapshot.connectionState == ConnectionState.done){
             if (!snapshot.hasData) {
@@ -119,9 +120,20 @@ class _TutorialVideoPageState extends State<TutorialVideoPage> {
             }
             else {
               print('else condition');
+
               return ListView.builder(
                 itemCount: snapshot.data!.data.length,
                 itemBuilder: (BuildContext context, index) {
+                  var videoIdd = YoutubePlayer.convertUrlToId("${snapshot.data!.data[index].video}");
+                  print('this is +$videoIdd');
+                  final YoutubePlayerController _controller = YoutubePlayerController(
+                    // initialVideoId: snapshot.data!.data[index].video,
+                    initialVideoId: 'iLnmTe5Q2Qw',
+                    flags: const YoutubePlayerFlags(
+                      autoPlay: true,
+                      mute: false,
+                    ),
+                  );
                   return Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 20, horizontal: 30),
@@ -147,7 +159,11 @@ class _TutorialVideoPageState extends State<TutorialVideoPage> {
                             ],
                             borderRadius:
                             BorderRadius.all(Radius.circular(30))),
-                        child: Text('${snapshot.data!.data[index].video}'),
+                        // child: Text(snapshot.data!.data[index].video),
+                        child: YoutubePlayer(
+                          controller: _controller,
+                          liveUIColor: Colors.amber,
+                        ),
                       ),
                     ),
                   );

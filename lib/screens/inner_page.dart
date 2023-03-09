@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:visiting_card/screens/edit_page.dart';
 
 class InnerPage extends StatefulWidget {
   final String image;
   final bool portrait;
-  const InnerPage({Key? key, required this.image,this.portrait = false}) : super(key: key);
+  final String? filename;
+  final String? category;
+  const InnerPage({Key? key, required this.image,this.portrait = false, this.filename, this.category}) : super(key: key);
 
   @override
   State<InnerPage> createState() => _InnerPageState();
@@ -86,6 +89,7 @@ class _InnerPageState extends State<InnerPage> {
             child: GestureDetector(
               onTap: () {
                 print('edit');
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> EditPage(image: widget.filename!, categoryName: widget.category!,)));
               },
               child: Container(
                 width: MediaQuery
@@ -108,14 +112,14 @@ class _InnerPageState extends State<InnerPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.edit,
                       size: 25,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
-                    Text(
+                    const Text(
                       'EDIT',
                       style:
                       TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
