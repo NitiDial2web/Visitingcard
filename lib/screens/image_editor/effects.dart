@@ -5,22 +5,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show ViewportOffset;
 import 'package:flutter/services.dart';
-// import 'package:image/filter.dart';
-// import 'package:image/utills.dart';
-// ignore: unused_import
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
-// ignore: unused_import
-import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:visiting_card/screens/image_editor/editor_page.dart';
-import 'package:visiting_card/screens/utils.dart';
-
-// ignore: unused_import
-import 'effects.dart';
-// ignore: unused_import
-// import 'stickers.dart';
+import 'package:visiting_card/screens/image_editor/utils.dart';
 
 @immutable
 class Effects extends StatefulWidget {
@@ -134,7 +123,7 @@ class _ExampleInstagramFilterSelectionState extends State<Effects> {
                         saveToGallery(context);
                         Navigator.push(context, MaterialPageRoute(builder: (context)=> EditorPage(imageBg: imageTemp)));
                       },
-                      child: Text('Done'),
+                      child: const Text('Done'),
                     )),
               ],
             ),

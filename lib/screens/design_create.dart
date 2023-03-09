@@ -7,9 +7,9 @@ import 'package:screenshot/screenshot.dart';
 import 'package:visiting_card/common/AppButtons.dart';
 import 'package:visiting_card/common/AppColors.dart';
 import 'package:visiting_card/common/AppStrings.dart';
-import 'package:visiting_card/screens/image_text.dart';
-import 'package:visiting_card/screens/text_info.dart';
-import 'package:visiting_card/screens/utils.dart';
+import 'package:visiting_card/screens/image_editor/text_info.dart';
+import 'package:visiting_card/screens/image_editor/image_text.dart';
+import 'package:visiting_card/screens/image_editor/utils.dart';
 
 class DesignCreate extends StatefulWidget {
   const DesignCreate({Key? key}) : super(key: key);
@@ -188,15 +188,6 @@ class _DesignCreateState extends State<DesignCreate> {
               ..pop(),
             child: const Text('Cancel'),
           ),
-          // DefaultButton(
-          //   onPressed: () => Navigator.of(context)
-          //     ..pop()
-          //     ..pop(),
-          //   // ignore: sort_child_properties_last
-          //   child: const Text('Back'),
-          //   color: Colors.red,
-          //   textColor: Colors.white,
-          // ),
           ElevatedButton(
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
@@ -224,13 +215,6 @@ class _DesignCreateState extends State<DesignCreate> {
             },
             child: const Text('Delete'),
           ),
-          // DefaultButton(
-          //   onPressed: () => addNewText2(context),
-          //   // ignore: sort_child_properties_last
-          //   child: const Text('Add Text'),
-          //   color: Colors.red,
-          //   textColor: Colors.white,
-          // ),
         ],
       ),
     );
@@ -302,7 +286,7 @@ class _DesignCreateState extends State<DesignCreate> {
                               builder: (context) {
                                 return Wrap(
                                   direction: Axis.vertical,
-                                  children: [
+                                  children: const [
                                     ListTile(
                                       leading: Icon(Icons.share),
                                       title: Text('Share'),

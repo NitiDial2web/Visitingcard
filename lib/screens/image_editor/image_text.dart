@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:visiting_card/screens/text_info.dart';
+import 'package:visiting_card/screens/image_editor/text_info.dart';
 
 class ImageText extends StatelessWidget {
   final TextInfo textInfo;

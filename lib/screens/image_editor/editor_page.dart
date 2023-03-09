@@ -12,11 +12,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:visiting_card/common/AppStrings.dart';
 import 'package:visiting_card/screens/image_editor/effects.dart';
-import 'package:visiting_card/screens/image_text.dart';
-import 'package:visiting_card/screens/text_info.dart';
-import 'package:visiting_card/screens/utils.dart';
+import 'package:visiting_card/screens/image_editor/text_info.dart';
+import 'package:visiting_card/screens/image_editor/utils.dart';
+import 'package:visiting_card/screens/image_editor/image_text.dart';
 
 class EditorPage extends StatefulWidget {
   final File? imageBg;
@@ -212,15 +211,6 @@ class _EditorPageState extends State<EditorPage> {
               ..pop(),
             child: const Text('Back'),
           ),
-          // DefaultButton(
-          //   onPressed: () => Navigator.of(context)
-          //     ..pop()
-          //     ..pop(),
-          //   // ignore: sort_child_properties_last
-          //   child: const Text('Back'),
-          //   color: Colors.red,
-          //   textColor: Colors.white,
-          // ),
           ElevatedButton(
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
@@ -234,13 +224,6 @@ class _EditorPageState extends State<EditorPage> {
             (edit) ? editText2(context, index!) : addNewText2(context),
             child: const Text('Add Text'),
           ),
-          // DefaultButton(
-          //   onPressed: () => addNewText2(context),
-          //   // ignore: sort_child_properties_last
-          //   child: const Text('Add Text'),
-          //   color: Colors.red,
-          //   textColor: Colors.white,
-          // ),
         ],
       ),
     );
@@ -253,17 +236,6 @@ class _EditorPageState extends State<EditorPage> {
         title: const Text(
           'Are you sure you want to delete?',
         ),
-        // content: TextField(
-        //   controller: textEditingController,
-        //   maxLines: 5,
-        //   decoration: const InputDecoration(
-        //     suffixIcon: Icon(
-        //       Icons.edit,
-        //     ),
-        //     filled: true,
-        //     hintText: 'Your Text Here..',
-        //   ),
-        // ),
         actions: <Widget>[
           ElevatedButton(
             style: ButtonStyle(
@@ -279,15 +251,6 @@ class _EditorPageState extends State<EditorPage> {
               ..pop(),
             child: const Text('Cancel'),
           ),
-          // DefaultButton(
-          //   onPressed: () => Navigator.of(context)
-          //     ..pop()
-          //     ..pop(),
-          //   // ignore: sort_child_properties_last
-          //   child: const Text('Back'),
-          //   color: Colors.red,
-          //   textColor: Colors.white,
-          // ),
           ElevatedButton(
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
@@ -315,13 +278,6 @@ class _EditorPageState extends State<EditorPage> {
             },
             child: const Text('Delete'),
           ),
-          // DefaultButton(
-          //   onPressed: () => addNewText2(context),
-          //   // ignore: sort_child_properties_last
-          //   child: const Text('Add Text'),
-          //   color: Colors.red,
-          //   textColor: Colors.white,
-          // ),
         ],
       ),
     );
@@ -414,15 +370,6 @@ class _EditorPageState extends State<EditorPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        // leading: Builder(
-        //   builder: (context) => IconButton(
-        //     icon: const Icon(Icons.menu_rounded),
-        //     onPressed: () => Scaffold.of(context).openDrawer(),
-        //   ),
-        // ),
-        // title: const Text(
-        //   "image editing",
-        // ),
         actions: <Widget>[
           Padding(
               padding: const EdgeInsets.only(right: 20.0),
@@ -481,146 +428,6 @@ class _EditorPageState extends State<EditorPage> {
               )),
         ],
       ),
-      // appBar: _appBar,
-      // drawer: Drawer(
-      //   child: ListView(
-      //     // Important: Remove any padding from the ListView.
-      //     padding: EdgeInsets.zero,
-      //     children: [
-      //       DrawerHeader(
-      //           decoration: const BoxDecoration(
-      //             color: Colors.blue,
-      //           ),
-      //           child: Column(
-      //             children: [
-      //               Container(
-      //                 alignment: Alignment.bottomLeft,
-      //                 margin: const EdgeInsets.only(top: 0, left: 0),
-      //                 child: Image.network(
-      //                   'https://logos.textgiraffe.com/logos/logo-name/Edit-designstyle-jungle-m.png',
-      //                   width: 140,
-      //                 ),
-      //               ),
-      //               Container(
-      //                 margin: const EdgeInsets.only(top: 0, left: 0),
-      //                 alignment: Alignment.bottomLeft,
-      //                 child: const Text("Image Editor",
-      //                     style: TextStyle(
-      //                         fontFamily: "PlayfairDisplay",
-      //                         color: Colors.white70,
-      //                         fontSize: 20,
-      //                         fontWeight: FontWeight.bold)),
-      //               ),
-      //             ],
-      //           )
-      //         // Image.network(
-      //         //   'https://logos.textgiraffe.com/logos/logo-name/Edit-designstyle-jungle-m.png',
-      //         //   width: 10,
-      //         // ),
-      //       ),
-      //       ListTile(
-      //         leading: const Icon(
-      //           Icons.emoji_emotions,
-      //           color: Colors.blue,
-      //         ),
-      //         title: const Text('stickers'),
-      //         onTap: () async {
-      //           File? file = image;
-      //           if (file != null) {
-      //             Navigator.of(context).push(
-      //               MaterialPageRoute(
-      //                 builder: (context) => AdvancedExample(
-      //                   selectedImage: file.path,
-      //                 ),
-      //               ),
-      //             );
-      //           }
-      //         },
-      //       ),
-      //       ListTile(
-      //         leading: const Icon(
-      //           Icons.color_lens,
-      //           color: Colors.blue,
-      //         ),
-      //         title: const Text('effects'),
-      //         onTap: () async {
-      //           File? file = image;
-      //           if (file != null) {
-      //             Navigator.of(context).push(
-      //               MaterialPageRoute(
-      //                 builder: (context) => MyApp(
-      //                   selectedImage: file.path,
-      //                 ),
-      //               ),
-      //             );
-      //           }
-      //         },
-      //       ),
-      //       ListTile(
-      //           leading: const Icon(
-      //             Icons.color_lens,
-      //             color: Colors.blue,
-      //           ),
-      //           title: const Text('Draw'),
-      //           onTap: () async {
-      //             Navigator.of(context).push(
-      //               MaterialPageRoute(
-      //                 builder: (context) => const FlutterPainterExample2(),
-      //               ),
-      //             );
-      //           }),
-      //       ListTile(
-      //         leading: const Icon(
-      //           Icons.filter_frames,
-      //           color: Colors.blue,
-      //         ),
-      //         title: const Text('Frames'),
-      //         onTap: () async {
-      //           File? file = image;
-      //           if (file != null) {
-      //             Navigator.of(context).push(
-      //               MaterialPageRoute(
-      //                 builder: (context) => Carousel(
-      //                   selectedImage: file.path,
-      //                 ),
-      //               ),
-      //             );
-      //           }
-      //         },
-      //       ),
-      //       ListTile(
-      //         leading: const Icon(
-      //           Icons.photo_album,
-      //           color: Colors.blue,
-      //         ),
-      //         title: const Text('Gallery'),
-      //         onTap: () {
-      //           pickImage2();
-      //         },
-      //       ),
-      //       ListTile(
-      //         leading: const Icon(
-      //           Icons.camera_enhance,
-      //           color: Colors.blue,
-      //         ),
-      //         title: const Text('Camera'),
-      //         onTap: () {
-      //           pickImageC2();
-      //         },
-      //       ),
-      //       ListTile(
-      //         leading: const Icon(
-      //           Icons.edit,
-      //           color: Colors.blue,
-      //         ),
-      //         title: const Text('Text'),
-      //         onTap: () {
-      //           addNewDialog2(context);
-      //         },
-      //       ),
-      //     ],
-      //   ),
-      // ),
       body: Screenshot(
         controller: screenshotController,
         child: SafeArea(
@@ -660,8 +467,9 @@ class _EditorPageState extends State<EditorPage> {
                       },
                       onTap: () => setCurrentIndex(context, i),
                       child: Draggable(
-                        feedback: ImageText(textInfo: texts[i]),
-                        child: ImageText(textInfo: texts[i]),
+                        feedback: Material(color:Colors.transparent,
+                            child: ImageText(textInfo: texts[i])),
+                        childWhenDragging: Container(),
                         onDragEnd: (drag) {
                           final renderBox =
                           context.findRenderObject() as RenderBox;
@@ -671,6 +479,7 @@ class _EditorPageState extends State<EditorPage> {
                             texts[i].left = off.dx;
                           });
                         },
+                        child: ImageText(textInfo: texts[i]),
                       ),
                     ),
                   ),
@@ -694,27 +503,6 @@ class _EditorPageState extends State<EditorPage> {
           ),
         ),
       ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      // floatingActionButton: Container(
-      //   margin: const EdgeInsets.only(top: 0.0, left: 310),
-      //   // alignment: Alignment.bottomRight,
-      //   padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10.0),
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //     children: <Widget>[
-      //       FloatingActionButton(
-      //         backgroundColor: Colors.yellow,
-      //         onPressed: () {
-      //           pickImage();
-      //         },
-      //         child: const Icon(
-      //           Icons.photo_album,
-      //           color: Colors.black,
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
     );
     // ignore: unnecessary_cast
   }
