@@ -20,7 +20,7 @@ class NewHomePage extends StatefulWidget {
 }
 
 class _NewHomePageState extends State<NewHomePage> {
-  Future<getCategoryImage?> getcategoryImage() async {
+  Future<GetCategoryImageDataList?> getcategoryImage() async {
     // preferences = await SharedPreferences.getInstance();
     try {
       final response = await http.get(
@@ -38,7 +38,7 @@ class _NewHomePageState extends State<NewHomePage> {
           // _videos.add(_usersData[i]['video']);
           // }
           // print('_videos :$_videos');
-          return getCategoryImage.fromJson(responseData);
+          return GetCategoryImageDataList.fromJson(responseData);
         } else {
           print("else responseData['status'] :${responseData['status']}");
           // AppCommon.showToast(responseData["message"]);
@@ -86,17 +86,17 @@ class _NewHomePageState extends State<NewHomePage> {
           ),
         ],
       ),
-      body: FutureBuilder<getCategoryImage?>(
+      body: FutureBuilder<GetCategoryImageDataList?>(
         future: getcategoryImage(),
         builder:
-            (BuildContext context, AsyncSnapshot<getCategoryImage?> snapshot) {
+            (BuildContext context, AsyncSnapshot<GetCategoryImageDataList?> snapshot) {
           if (!snapshot.hasData) {
             print('if');
             return const Center(child: CircularProgressIndicator());
           } else {
-            print("art: ${snapshot.data!.data![1]!.list![1]!.id}");
-            print('list: ${snapshot.data!.data![1]!.list}');
-            print('category: ${snapshot.data!.data!.length}');
+            print("art: ${snapshot.data!.data[1].list[1].id}");
+            print('list: ${snapshot.data!.data[1].list}');
+            print('category: ${snapshot.data!.data.length}');
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -117,7 +117,9 @@ class _NewHomePageState extends State<NewHomePage> {
                           itemCount: 4,
                           itemBuilder: (_, index) {
                             return (index != 0)
-                                ? GestureDetector(
+                                ?(snapshot.data!.data[0].list.isEmpty)
+                            ?Container()
+                                : GestureDetector(
                                     onTap: () {
                                       print('object');
                                     },
@@ -145,8 +147,7 @@ class _NewHomePageState extends State<NewHomePage> {
                                       ),
                                     ),
                                   )
-                                // : (snapshot.data!.data![0]!.list!.isEmpty)
-                                // ?Container()
+                                // :
                                 : GestureDetector(
                                     onTap: () {
                                       print('object111');
@@ -212,7 +213,7 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![1]!.categoryName
+                            title: snapshot.data!.data[1].categoryName
                                 .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
@@ -220,15 +221,15 @@ class _NewHomePageState extends State<NewHomePage> {
                         TextButton(
                             onPressed: () {
                               print('see more');
-                              print(snapshot.data!.data![1]!.list!.length);
+                              print(snapshot.data!.data[1].list.length);
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => CategoriesPage(
                                             image: snapshot
-                                                .data!.data![1]!.list!
+                                                .data!.data[1].list
                                                 .toList()
-                                                .map((e) => e!.image),
+                                                .map((e) => e.image),
                                           )));
                             },
                             child: const Text(
@@ -249,7 +250,9 @@ class _NewHomePageState extends State<NewHomePage> {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
-                                  ? GestureDetector(
+                                  ? (snapshot.data!.data[1].list.isEmpty)
+                                ?Container()
+                                : GestureDetector(
                                       onTap: () {
                                         print('see more1111');
                                         Navigator.push(
@@ -258,18 +261,18 @@ class _NewHomePageState extends State<NewHomePage> {
                                                 builder: (context) => InnerPage(
                                                       image: snapshot
                                                           .data!
-                                                          .data![1]!
-                                                          .list![index]!
+                                                          .data[1]
+                                                          .list[index]
                                                           .image
                                                           .toString(),
                                                   category: snapshot
                                                       .data!
-                                                      .data![1]!
-                                                      .categoryName,
+                                                      .data[1]
+                                                      .list[index].name,
                                                   filename: snapshot
                                                       .data!
-                                                      .data![1]!
-                                                      .list![index]!
+                                                      .data[1]
+                                                      .list[index]
                                                       .filename,
                                                     )));
                                       },
@@ -282,14 +285,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                           color: Colors.lightBlue,
                                           image: DecorationImage(
                                             image: NetworkImage(snapshot.data!
-                                                .data![1]!.list![index]!.image
+                                                .data[1].list[index].image
                                                 .toString()),
                                             fit: BoxFit.cover,
                                           ),
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                             Radius.circular(15),
                                           ),
-                                          boxShadow: [
+                                          boxShadow: const [
                                             BoxShadow(
                                               color: AppColors.kDarkGrey,
                                               // offset: Offset(0.0, 0),
@@ -310,9 +313,9 @@ class _NewHomePageState extends State<NewHomePage> {
                                                 builder: (context) =>
                                                     CategoriesPage(
                                                       image: snapshot
-                                                          .data!.data![1]!.list!
+                                                          .data!.data[1].list
                                                           .toList()
-                                                          .map((e) => e!.image),
+                                                          .map((e) => e.image),
                                                     )));
                                       },
                                       child: Container(
@@ -356,7 +359,7 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![2]!.categoryName
+                            title: snapshot.data!.data[2].categoryName
                                 .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
@@ -369,9 +372,9 @@ class _NewHomePageState extends State<NewHomePage> {
                                   MaterialPageRoute(
                                       builder: (context) => CategoriesPage(
                                         image: snapshot
-                                            .data!.data![2]!.list!
+                                            .data!.data[2].list
                                             .toList()
-                                            .map((e) => e!.image),
+                                            .map((e) => e.image),
                                       )));
                             },
                             child: const Text(
@@ -392,7 +395,9 @@ class _NewHomePageState extends State<NewHomePage> {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
-                                  ? GestureDetector(
+                                  ? (snapshot.data!.data[2].list.isEmpty)
+                                  ?Container()
+                                  : GestureDetector(
                                       onTap: () {
                                         print('see more1111');
                                         Navigator.push(
@@ -401,18 +406,18 @@ class _NewHomePageState extends State<NewHomePage> {
                                                 builder: (context) => InnerPage(
                                                       image: snapshot
                                                           .data!
-                                                          .data![2]!
-                                                          .list![index]!
+                                                          .data[2]
+                                                          .list[index]
                                                           .image
                                                           .toString(),
                                                   category: snapshot
                                                       .data!
-                                                      .data![2]!
-                                                      .categoryName,
+                                                      .data[2]
+                                                      .list[index].name,
                                                   filename: snapshot
                                                       .data!
-                                                      .data![2]!
-                                                      .list![index]!
+                                                      .data[2]
+                                                      .list[index]
                                                       .filename,
                                                     )));
                                       },
@@ -425,14 +430,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                           color: Colors.lightBlue,
                                           image: DecorationImage(
                                             image: NetworkImage(snapshot.data!
-                                                .data![2]!.list![index]!.image
+                                                .data[2].list[index].image
                                                 .toString()),
                                             fit: BoxFit.cover,
                                           ),
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                             Radius.circular(15),
                                           ),
-                                          boxShadow: [
+                                          boxShadow: const [
                                             BoxShadow(
                                               color: AppColors.kDarkGrey,
                                               // offset: Offset(0.0, 0),
@@ -452,9 +457,9 @@ class _NewHomePageState extends State<NewHomePage> {
                                             MaterialPageRoute(
                                                 builder: (context) => CategoriesPage(
                                                   image: snapshot
-                                                      .data!.data![2]!.list!
+                                                      .data!.data[2].list
                                                       .toList()
-                                                      .map((e) => e!.image),
+                                                      .map((e) => e.image),
                                                 )));
                                       },
                                       child: Container(
@@ -498,7 +503,7 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![3]!.categoryName
+                            title: snapshot.data!.data[3].categoryName
                                 .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
@@ -511,9 +516,9 @@ class _NewHomePageState extends State<NewHomePage> {
                                   MaterialPageRoute(
                                       builder: (context) => CategoriesPage(
                                         image: snapshot
-                                            .data!.data![3]!.list!
+                                            .data!.data[3].list
                                             .toList()
-                                            .map((e) => e!.image),
+                                            .map((e) => e.image),
                                       )));
                             },
                             child: const Text(
@@ -534,7 +539,9 @@ class _NewHomePageState extends State<NewHomePage> {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
-                                  ? GestureDetector(
+                                  ? (snapshot.data!.data[3].list.isEmpty)
+                                  ?Container()
+                                  : GestureDetector(
                                       onTap: () {
                                         print('see more1111');
                                         Navigator.push(
@@ -543,10 +550,19 @@ class _NewHomePageState extends State<NewHomePage> {
                                                 builder: (context) => InnerPage(
                                                       image: snapshot
                                                           .data!
-                                                          .data![3]!
-                                                          .list![index]!
+                                                          .data[3]
+                                                          .list[index]
                                                           .image
                                                           .toString(),
+                                                  category: snapshot
+                                                      .data!
+                                                      .data[3]
+                                                      .list[index].name,
+                                                  filename: snapshot
+                                                      .data!
+                                                      .data[3]
+                                                      .list[index]
+                                                      .filename,
                                                     )));
                                       },
                                       child: Container(
@@ -558,14 +574,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                           color: Colors.lightBlue,
                                           image: DecorationImage(
                                             image: NetworkImage(snapshot.data!
-                                                .data![3]!.list![index]!.image
+                                                .data[3].list[index].image
                                                 .toString()),
                                             fit: BoxFit.cover,
                                           ),
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                             Radius.circular(15),
                                           ),
-                                          boxShadow: [
+                                          boxShadow: const [
                                             BoxShadow(
                                               color: AppColors.kDarkGrey,
                                               // offset: Offset(0.0, 0),
@@ -585,9 +601,9 @@ class _NewHomePageState extends State<NewHomePage> {
                                             MaterialPageRoute(
                                                 builder: (context) => CategoriesPage(
                                                   image: snapshot
-                                                      .data!.data![3]!.list!
+                                                      .data!.data[3].list
                                                       .toList()
-                                                      .map((e) => e!.image),
+                                                      .map((e) => e.image),
                                                 )));
                                       },
                                       child: Container(
@@ -631,7 +647,7 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![4]!.categoryName
+                            title: snapshot.data!.data[4].categoryName
                                 .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
@@ -644,9 +660,9 @@ class _NewHomePageState extends State<NewHomePage> {
                                   MaterialPageRoute(
                                       builder: (context) => CategoriesPage(
                                         image: snapshot
-                                            .data!.data![4]!.list!
+                                            .data!.data[4].list
                                             .toList()
-                                            .map((e) => e!.image),
+                                            .map((e) => e.image),
                                       )));
                             },
                             child: const Text(
@@ -667,7 +683,9 @@ class _NewHomePageState extends State<NewHomePage> {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
-                                  ? GestureDetector(
+                                  ?(snapshot.data!.data[4].list.isEmpty)
+                                  ?Container()
+                                  :  GestureDetector(
                                       onTap: () {
                                         print('see more1111');
                                         Navigator.push(
@@ -676,10 +694,19 @@ class _NewHomePageState extends State<NewHomePage> {
                                                 builder: (context) => InnerPage(
                                                       image: snapshot
                                                           .data!
-                                                          .data![4]!
-                                                          .list![index]!
+                                                          .data[4]
+                                                          .list[index]
                                                           .image
                                                           .toString(),
+                                                  category: snapshot
+                                                      .data!
+                                                      .data[4]
+                                                      .list[index].name,
+                                                  filename: snapshot
+                                                      .data!
+                                                      .data[4]
+                                                      .list[index]
+                                                      .filename,
                                                     )));
                                       },
                                       child: Container(
@@ -691,14 +718,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                           color: Colors.lightBlue,
                                           image: DecorationImage(
                                             image: NetworkImage(snapshot.data!
-                                                .data![4]!.list![index]!.image
+                                                .data[4].list[index].image
                                                 .toString()),
                                             fit: BoxFit.cover,
                                           ),
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                             Radius.circular(15),
                                           ),
-                                          boxShadow: [
+                                          boxShadow: const [
                                             BoxShadow(
                                               color: AppColors.kDarkGrey,
                                               // offset: Offset(0.0, 0),
@@ -718,9 +745,9 @@ class _NewHomePageState extends State<NewHomePage> {
                                             MaterialPageRoute(
                                                 builder: (context) => CategoriesPage(
                                                   image: snapshot
-                                                      .data!.data![4]!.list!
+                                                      .data!.data[4].list
                                                       .toList()
-                                                      .map((e) => e!.image),
+                                                      .map((e) => e.image),
                                                 )));
                                       },
                                       child: Container(
@@ -764,7 +791,7 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![5]!.categoryName
+                            title: snapshot.data!.data[5].categoryName
                                 .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
@@ -777,9 +804,9 @@ class _NewHomePageState extends State<NewHomePage> {
                                   MaterialPageRoute(
                                       builder: (context) => CategoriesPage(
                                         image: snapshot
-                                            .data!.data![5]!.list!
+                                            .data!.data[5].list
                                             .toList()
-                                            .map((e) => e!.image),
+                                            .map((e) => e.image),
                                         portrait: true,
                                       )));
                             },
@@ -801,7 +828,9 @@ class _NewHomePageState extends State<NewHomePage> {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
-                                  ? GestureDetector(
+                                  ? (snapshot.data!.data[5].list.isEmpty)
+                                  ?Container()
+                                  : GestureDetector(
                                       onTap: () {
                                         print('see more1111');
                                         Navigator.push(
@@ -810,10 +839,19 @@ class _NewHomePageState extends State<NewHomePage> {
                                                 builder: (context) => InnerPage(
                                                       image: snapshot
                                                           .data!
-                                                          .data![5]!
-                                                          .list![index]!
+                                                          .data[5]
+                                                          .list[index]
                                                           .image
                                                           .toString(),
+                                                  category: snapshot
+                                                      .data!
+                                                      .data[5]
+                                                      .list[index].name,
+                                                  filename: snapshot
+                                                      .data!
+                                                      .data[5]
+                                                      .list[index]
+                                                      .filename,
                                                     )));
                                       },
                                       child: Container(
@@ -825,14 +863,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                           color: Colors.lightBlue,
                                           image: DecorationImage(
                                             image: NetworkImage(snapshot.data!
-                                                .data![5]!.list![index]!.image
+                                                .data[5].list[index].image
                                                 .toString()),
                                             fit: BoxFit.cover,
                                           ),
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                             Radius.circular(15),
                                           ),
-                                          boxShadow: [
+                                          boxShadow: const [
                                             BoxShadow(
                                               color: AppColors.kDarkGrey,
                                               // offset: Offset(0.0, 0),
@@ -852,9 +890,8 @@ class _NewHomePageState extends State<NewHomePage> {
                                             MaterialPageRoute(
                                                 builder: (context) => CategoriesPage(
                                                   image: snapshot
-                                                      .data!.data![5]!.list!
-                                                      .toList()
-                                                      .map((e) => e!.image,),
+                                                      .data!.data[5].list.toList()
+                                                      .map((e) => e.image,),
                                                     portrait:true
                                                 )));
                                       },
@@ -899,7 +936,7 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![6]!.categoryName
+                            title: snapshot.data!.data[6].categoryName
                                 .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
@@ -926,7 +963,9 @@ class _NewHomePageState extends State<NewHomePage> {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
-                                  ? GestureDetector(
+                                  ? (snapshot.data!.data[6].list.isEmpty)
+                                  ?Container()
+                                  : GestureDetector(
                                       onTap: () {
                                         print('see more1111');
                                         Navigator.push(
@@ -935,10 +974,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                                 builder: (context) => InnerPage(
                                                       image: snapshot
                                                           .data!
-                                                          .data![6]!
-                                                          .list![index]!
-                                                          .image
+                                                          .data[6].list[index].image
                                                           .toString(),
+                                                  category: snapshot
+                                                      .data!
+                                                      .data[6].list[index].name,
+                                                  filename: snapshot
+                                                      .data!
+                                                      .data[6].list[index].filename,
                                                     )));
                                       },
                                       child: Container(
@@ -950,14 +993,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                           color: Colors.lightBlue,
                                           image: DecorationImage(
                                             image: NetworkImage(snapshot.data!
-                                                .data![6]!.list![index]!.image
+                                                .data[6].list[index].image
                                                 .toString()),
                                             fit: BoxFit.cover,
                                           ),
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                             Radius.circular(15),
                                           ),
-                                          boxShadow: [
+                                          boxShadow: const [
                                             BoxShadow(
                                               color: AppColors.kDarkGrey,
                                               // offset: Offset(0.0, 0),
@@ -1014,7 +1057,7 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![7]!.categoryName
+                            title: snapshot.data!.data[7].categoryName
                                 .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
@@ -1041,7 +1084,9 @@ class _NewHomePageState extends State<NewHomePage> {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
-                                  ? GestureDetector(
+                                  ? (snapshot.data!.data[7].list.isEmpty)
+                                  ?Container()
+                                  : GestureDetector(
                                       onTap: () {
                                         print('see more1111');
                                         Navigator.push(
@@ -1050,10 +1095,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                                 builder: (context) => InnerPage(
                                                       image: snapshot
                                                           .data!
-                                                          .data![7]!
-                                                          .list![index]!
-                                                          .image
+                                                          .data[7].list[index].image
                                                           .toString(),
+                                                  category: snapshot
+                                                      .data!
+                                                      .data[7].list[index].name,
+                                                  filename: snapshot
+                                                      .data!
+                                                      .data[7].list[index].filename,
                                                     )));
                                       },
                                       child: Container(
@@ -1065,14 +1114,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                           color: Colors.lightBlue,
                                           image: DecorationImage(
                                             image: NetworkImage(snapshot.data!
-                                                .data![7]!.list![index]!.image
+                                                .data[7].list[index].image
                                                 .toString()),
                                             fit: BoxFit.cover,
                                           ),
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                             Radius.circular(15),
                                           ),
-                                          boxShadow: [
+                                          boxShadow: const [
                                             BoxShadow(
                                               color: AppColors.kDarkGrey,
                                               // offset: Offset(0.0, 0),
@@ -1129,7 +1178,7 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![8]!.categoryName
+                            title: snapshot.data!.data[8].categoryName
                                 .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
@@ -1156,7 +1205,9 @@ class _NewHomePageState extends State<NewHomePage> {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
-                                  ? GestureDetector(
+                                  ? (snapshot.data!.data[8].list.isEmpty)
+                                  ?Container()
+                                  : GestureDetector(
                                       onTap: () {
                                         print('see more1111');
                                         Navigator.push(
@@ -1165,10 +1216,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                                 builder: (context) => InnerPage(
                                                       image: snapshot
                                                           .data!
-                                                          .data![8]!
-                                                          .list![index]!
-                                                          .image
+                                                          .data[8].list[index].image
                                                           .toString(),
+                                                  category: snapshot
+                                                      .data!
+                                                      .data[8].list[index].name,
+                                                  filename: snapshot
+                                                      .data!
+                                                      .data[8].list[index].filename,
                                                     )));
                                       },
                                       child: Container(
@@ -1180,14 +1235,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                           color: Colors.lightBlue,
                                           image: DecorationImage(
                                             image: NetworkImage(snapshot.data!
-                                                .data![8]!.list![index]!.image
+                                                .data[8].list[index].image
                                                 .toString()),
                                             fit: BoxFit.cover,
                                           ),
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                             Radius.circular(15),
                                           ),
-                                          boxShadow: [
+                                          boxShadow: const [
                                             BoxShadow(
                                               color: AppColors.kDarkGrey,
                                               // offset: Offset(0.0, 0),
@@ -1244,7 +1299,7 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![9]!.categoryName
+                            title: snapshot.data!.data[9].categoryName
                                 .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
@@ -1271,7 +1326,9 @@ class _NewHomePageState extends State<NewHomePage> {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
-                                  ? GestureDetector(
+                                  ? (snapshot.data!.data[9].list.isEmpty)
+                                  ?Container()
+                                  : GestureDetector(
                                       onTap: () {
                                         print('see more1111');
                                         Navigator.push(
@@ -1280,10 +1337,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                                 builder: (context) => InnerPage(
                                                       image: snapshot
                                                           .data!
-                                                          .data![9]!
-                                                          .list![index]!
-                                                          .image
+                                                          .data[9].list[index].image
                                                           .toString(),
+                                                  category: snapshot
+                                                      .data!
+                                                      .data[9].list[index].name,
+                                                  filename: snapshot
+                                                      .data!
+                                                      .data[9].list[index].filename,
                                                     )));
                                       },
                                       child: Container(
@@ -1295,14 +1356,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                           color: Colors.lightBlue,
                                           image: DecorationImage(
                                             image: NetworkImage(snapshot.data!
-                                                .data![9]!.list![index]!.image
+                                                .data[9].list[index].image
                                                 .toString()),
                                             fit: BoxFit.cover,
                                           ),
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                             Radius.circular(15),
                                           ),
-                                          boxShadow: [
+                                          boxShadow: const [
                                             BoxShadow(
                                               color: AppColors.kDarkGrey,
                                               // offset: Offset(0.0, 0),
@@ -1359,7 +1420,7 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![10]!.categoryName
+                            title: snapshot.data!.data[10].categoryName
                                 .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
@@ -1386,7 +1447,9 @@ class _NewHomePageState extends State<NewHomePage> {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
-                                  ? GestureDetector(
+                                  ? (snapshot.data!.data[10].list.isEmpty)
+                                  ?Container()
+                                  : GestureDetector(
                                       onTap: () {
                                         print('see more1111');
                                         Navigator.push(
@@ -1395,10 +1458,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                                 builder: (context) => InnerPage(
                                                       image: snapshot
                                                           .data!
-                                                          .data![10]!
-                                                          .list![index]!
-                                                          .image
+                                                          .data[10].list[index].image
                                                           .toString(),
+                                                  category: snapshot
+                                                      .data!
+                                                      .data[10].list[index].name,
+                                                  filename: snapshot
+                                                      .data!
+                                                      .data[10].list[index].filename,
                                                     )));
                                       },
                                       child: Container(
@@ -1410,14 +1477,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                           color: Colors.lightBlue,
                                           image: DecorationImage(
                                             image: NetworkImage(snapshot.data!
-                                                .data![10]!.list![index]!.image
+                                                .data[10].list[index].image
                                                 .toString()),
                                             fit: BoxFit.cover,
                                           ),
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                             Radius.circular(15),
                                           ),
-                                          boxShadow: [
+                                          boxShadow: const [
                                             BoxShadow(
                                               color: AppColors.kDarkGrey,
                                               // offset: Offset(0.0, 0),
@@ -1474,7 +1541,7 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![11]!.categoryName
+                            title: snapshot.data!.data[11].categoryName
                                 .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
@@ -1501,7 +1568,9 @@ class _NewHomePageState extends State<NewHomePage> {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
-                                  ? GestureDetector(
+                                  ? (snapshot.data!.data[11].list.isEmpty)
+                                  ?Container()
+                                  : GestureDetector(
                                       onTap: () {
                                         print('see more1111');
                                         Navigator.push(
@@ -1510,10 +1579,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                                 builder: (context) => InnerPage(
                                                       image: snapshot
                                                           .data!
-                                                          .data![11]!
-                                                          .list![index]!
-                                                          .image
+                                                          .data[11].list[index].image
                                                           .toString(),
+                                                  category: snapshot
+                                                      .data!
+                                                      .data[11].list[index].name,
+                                                  filename: snapshot
+                                                      .data!
+                                                      .data[11].list[index].filename,
                                                     )));
                                       },
                                       child: Container(
@@ -1525,14 +1598,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                           color: Colors.lightBlue,
                                           image: DecorationImage(
                                             image: NetworkImage(snapshot.data!
-                                                .data![11]!.list![index]!.image
+                                                .data[11].list[index].image
                                                 .toString()),
                                             fit: BoxFit.cover,
                                           ),
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                             Radius.circular(15),
                                           ),
-                                          boxShadow: [
+                                          boxShadow: const [
                                             BoxShadow(
                                               color: AppColors.kDarkGrey,
                                               // offset: Offset(0.0, 0),
@@ -1589,7 +1662,7 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![12]!.categoryName
+                            title: snapshot.data!.data[12].categoryName
                                 .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
@@ -1616,7 +1689,9 @@ class _NewHomePageState extends State<NewHomePage> {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
-                                  ? GestureDetector(
+                                  ? (snapshot.data!.data[12].list.isEmpty)
+                                  ?Container()
+                                  : GestureDetector(
                                       onTap: () {
                                         print('see more1111');
                                         Navigator.push(
@@ -1625,10 +1700,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                                 builder: (context) => InnerPage(
                                                       image: snapshot
                                                           .data!
-                                                          .data![12]!
-                                                          .list![index]!
-                                                          .image
+                                                          .data[12].list[index].image
                                                           .toString(),
+                                                  category: snapshot
+                                                      .data!
+                                                      .data[12].list[index].name,
+                                                  filename: snapshot
+                                                      .data!
+                                                      .data[12].list[index].filename,
                                                     )));
                                       },
                                       child: Container(
@@ -1640,14 +1719,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                           color: Colors.lightBlue,
                                           image: DecorationImage(
                                             image: NetworkImage(snapshot.data!
-                                                .data![12]!.list![index]!.image
+                                                .data[12].list[index].image
                                                 .toString()),
                                             fit: BoxFit.cover,
                                           ),
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                             Radius.circular(15),
                                           ),
-                                          boxShadow: [
+                                          boxShadow: const [
                                             BoxShadow(
                                               color: AppColors.kDarkGrey,
                                               // offset: Offset(0.0, 0),
@@ -1704,7 +1783,7 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![13]!.categoryName
+                            title: snapshot.data!.data[13].categoryName
                                 .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
@@ -1731,7 +1810,9 @@ class _NewHomePageState extends State<NewHomePage> {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
-                                  ? GestureDetector(
+                                  ? (snapshot.data!.data[13].list.isEmpty)
+                                  ?Container()
+                                  : GestureDetector(
                                       onTap: () {
                                         print('see more1111');
                                         Navigator.push(
@@ -1740,10 +1821,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                                 builder: (context) => InnerPage(
                                                       image: snapshot
                                                           .data!
-                                                          .data![13]!
-                                                          .list![index]!
-                                                          .image
+                                                          .data[13].list[index].image
                                                           .toString(),
+                                                  category: snapshot
+                                                      .data!
+                                                      .data[13].list[index].name,
+                                                  filename: snapshot
+                                                      .data!
+                                                      .data[13].list[index].filename,
                                                     )));
                                       },
                                       child: Container(
@@ -1755,14 +1840,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                           color: Colors.lightBlue,
                                           image: DecorationImage(
                                             image: NetworkImage(snapshot.data!
-                                                .data![13]!.list![index]!.image
+                                                .data[13].list[index].image
                                                 .toString()),
                                             fit: BoxFit.cover,
                                           ),
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                             Radius.circular(15),
                                           ),
-                                          boxShadow: [
+                                          boxShadow: const [
                                             BoxShadow(
                                               color: AppColors.kDarkGrey,
                                               // offset: Offset(0.0, 0),
@@ -1819,7 +1904,7 @@ class _NewHomePageState extends State<NewHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButtons().kTextBold(
-                            title: snapshot.data!.data![14]!.categoryName
+                            title: snapshot.data!.data[14].categoryName
                                 .toString(),
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
@@ -1846,7 +1931,9 @@ class _NewHomePageState extends State<NewHomePage> {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: (index != 3)
-                                  ? GestureDetector(
+                                  ? (snapshot.data!.data[14].list.isEmpty)
+                                  ?Container()
+                                  : GestureDetector(
                                       onTap: () {
                                         print('see more1111');
                                         Navigator.push(
@@ -1855,10 +1942,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                                 builder: (context) => InnerPage(
                                                       image: snapshot
                                                           .data!
-                                                          .data![14]!
-                                                          .list![index]!
-                                                          .image
+                                                          .data[14].list[index].image
                                                           .toString(),
+                                                  category: snapshot
+                                                      .data!
+                                                      .data[14].list[index].name,
+                                                  filename: snapshot
+                                                      .data!
+                                                      .data[14].list[index].filename,
                                                     )));
                                       },
                                       child: Container(
@@ -1870,14 +1961,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                           color: Colors.lightBlue,
                                           image: DecorationImage(
                                             image: NetworkImage(snapshot.data!
-                                                .data![14]!.list![index]!.image
+                                                .data[14].list[index].image
                                                 .toString()),
                                             fit: BoxFit.cover,
                                           ),
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                             Radius.circular(15),
                                           ),
-                                          boxShadow: [
+                                          boxShadow: const [
                                             BoxShadow(
                                               color: AppColors.kDarkGrey,
                                               // offset: Offset(0.0, 0),

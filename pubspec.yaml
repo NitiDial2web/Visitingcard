@@ -60,6 +60,7 @@ dependencies:
   shared_preferences: ^2.0.18
   youtube_player_flutter: ^8.1.2
   flutter_downloader: ^1.10.2
+#  webcontent_converter: ^0.0.8+3
 
 dev_dependencies:
   flutter_test:

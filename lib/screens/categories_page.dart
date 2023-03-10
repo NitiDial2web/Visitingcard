@@ -21,7 +21,7 @@ class CategoriesPage extends StatefulWidget {
 class _CategoriesPageState extends State<CategoriesPage> {
   List _images = [];
 
-  Future<getCategoryImage?> getcategoryImage() async {
+  Future<GetCategoryImageDataList?> getcategoryImage() async {
     // preferences = await SharedPreferences.getInstance();
     try {
       final response = await http.get(
@@ -46,7 +46,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
           // _images.add(_usersData[i]['video']);
           // }
           print('_images :$_images');
-          return getCategoryImage.fromJson(responseData);
+          return GetCategoryImageDataList.fromJson(responseData);
         } else {
           print("else responseData['status'] :${responseData['status']}");
           // AppCommon.showToast(responseData["message"]);
@@ -66,9 +66,9 @@ class _CategoriesPageState extends State<CategoriesPage> {
       appBar: AppBar(
         elevation: 0,
       ),
-      body: FutureBuilder<getCategoryImage?>(
+      body: FutureBuilder<GetCategoryImageDataList?>(
         future: getcategoryImage(),
-        builder: (BuildContext context,AsyncSnapshot<getCategoryImage?> snapshot){
+        builder: (BuildContext context,AsyncSnapshot<GetCategoryImageDataList?> snapshot){
           if(!snapshot.hasData){
             print('if');
             return const Center(child: CircularProgressIndicator());

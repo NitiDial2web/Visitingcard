@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -13,6 +15,7 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:visiting_card/common/AppColors.dart';
 import 'package:visiting_card/screens/image_editor/utils.dart';
 import 'package:visiting_card/screens/settings_page.dart';
+// import 'package:webcontent_converter/webcontent_converter.dart';
 
 class EditPage extends StatefulWidget {
   final String image;
@@ -83,75 +86,84 @@ class _EditPageState extends State<EditPage> {
     await ImageGallerySaver.saveImage(bytes, name: name);
   }
 
-  downloadDialog() {
-    print('dialog opened');
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text('Download Format:'),
-        actions: [
-          ElevatedButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
-              textStyle: MaterialStateProperty.all<TextStyle>(
-                const TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            onPressed: () {
-              print('png');
-              saveToGallery(context);
-            },
-            child: const Text('Png'),
-          ),
-          ElevatedButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
-              textStyle: MaterialStateProperty.all<TextStyle>(
-                const TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            onPressed: () async {
-              print('Download');
-              print(
-                  'url:${await _controller.evaluateJavascript(source: "window.document.URL;")}');
-              print(
-                  'niti hello${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}');
-              String html = await _controller.evaluateJavascript(
-                  source: "window.document.body.innerHTML;");
-              print(html);
-              convert(html,
-                  "File Name${DateTime.now().toString().split(' ').first}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}");
-              var targetPath2 = await _localPath;
-              File pdfFile() {
-                if (Platform.isIOS) {
-                  return File(targetPath2.toString() +
-                      "/" +
-                      "File Name333" +
-                      '.pdf'); // for ios
-                } else {
-                  print("aaaaa $targetPath2");
-                  // File('storage/emulated/0/Download/' + cfData + '.pdf')
-                  return File(targetPath2.toString() +
-                      "/" +
-                      "File Name" +
-                      '.pdf'); // for android
-                }
-              }
-
-              SfPdfViewer.file(pdfFile());
-              // generateExampleDocument();
-              print('download_successfull..//:');
-            },
-            child: const Text('Pdf'),
-          ),
-        ],
-      ),
-    );
-  }
+  // downloadDialog() {
+  //   print('dialog opened');
+  //   return showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) => AlertDialog(
+  //       title: const Text('Download Format:'),
+  //       actions: [
+  //         ElevatedButton(
+  //           style: ButtonStyle(
+  //             backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+  //             textStyle: MaterialStateProperty.all<TextStyle>(
+  //               const TextStyle(
+  //                 color: Colors.white,
+  //               ),
+  //             ),
+  //           ),
+  //           onPressed: () async{
+  //             print('png');
+  //             print(
+  //                 'url:${await _controller.evaluateJavascript(source: "window.document.URL;")}');
+  //             String html = await _controller.evaluateJavascript(
+  //                   source: "window.document.getElementsByTagName('html')[0].outerHTML;");
+  //             var bytes = await WebcontentConverter.contentToImage(content: html);
+  //             // var bytes = await WebcontentConverter.webUriToImage(
+  //             //     uri: "${await http.get(Uri.parse('${_controller.evaluateJavascript(source: "window.document.URL;")}'))}");
+  //             if (bytes.length > 0) saveImage(bytes);
+  //             Navigator.pop(context);
+  //             // saveToGallery(context);
+  //           },
+  //           child: const Text('Png'),
+  //         ),
+  //         ElevatedButton(
+  //           style: ButtonStyle(
+  //             backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+  //             textStyle: MaterialStateProperty.all<TextStyle>(
+  //               const TextStyle(
+  //                 color: Colors.white,
+  //               ),
+  //             ),
+  //           ),
+  //           onPressed: () async {
+  //             print('Download');
+  //             print(
+  //                 'url:${await _controller.evaluateJavascript(source: "window.document.URL;")}');
+  //             print(
+  //                 'niti hello${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}');
+  //             String html = await _controller.evaluateJavascript(
+  //                 source: "window.document.body.innerHTML;");
+  //             print(html);
+  //             convert(html,
+  //                 "File Name${DateTime.now().toString().split(' ').first}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}");
+  //             var targetPath2 = await _localPath;
+  //             File pdfFile() {
+  //               if (Platform.isIOS) {
+  //                 return File(targetPath2.toString() +
+  //                     "/" +
+  //                     "File Name333" +
+  //                     '.pdf'); // for ios
+  //               } else {
+  //                 print("aaaaa $targetPath2");
+  //                 // File('storage/emulated/0/Download/' + cfData + '.pdf')
+  //                 return File(targetPath2.toString() +
+  //                     "/" +
+  //                     "File Name" +
+  //                     '.pdf'); // for android
+  //               }
+  //             }
+  //
+  //             SfPdfViewer.file(pdfFile());
+  //             // generateExampleDocument();
+  //             print('download_successfull..//:');
+  //           },
+  //           child: const Text('Pdf'),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -184,7 +196,37 @@ class _EditPageState extends State<EditPage> {
             child: GestureDetector(
               onTap: () async {
                 print('dialog');
-                downloadDialog();
+                print('Download');
+                print(
+                    'url:${await _controller.evaluateJavascript(source: "window.document.URL;")}');
+                print(
+                    'niti hello${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}');
+                String html = await _controller.evaluateJavascript(
+                    source: "window.document.body.innerHTML;");
+                print(html);
+                convert(html,
+                    "File Name${DateTime.now().toString().split(' ').first}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}");
+                var targetPath2 = await _localPath;
+                File pdfFile() {
+                  if (Platform.isIOS) {
+                    return File(targetPath2.toString() +
+                        "/" +
+                        "File Name333" +
+                        '.pdf'); // for ios
+                  } else {
+                    print("aaaaa $targetPath2");
+                    // File('storage/emulated/0/Download/' + cfData + '.pdf')
+                    return File(targetPath2.toString() +
+                        "/" +
+                        "File Name" +
+                        '.pdf'); // for android
+                  }
+                }
+
+                SfPdfViewer.file(pdfFile());
+                // generateExampleDocument();
+                print('download_successfull..//:');
+                // downloadDialog();
                 // Navigator.push(context, MaterialPageRoute(builder: (context)=> const AppsStorePage()));
               },
               child: const Icon(Icons.download),

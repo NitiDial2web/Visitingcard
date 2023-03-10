@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
+// import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -34,17 +34,17 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  convert(String cfData, String name) async {  // Name is File Name that you want to give the file
-    var targetPath = await _localPath;
-    var targetFileName = name;
-
-    var generatedPdfFile = await FlutterHtmlToPdf.convertFromHtmlContent(
-        cfData, targetPath!, targetFileName);
-    print('generatedPdfFile:$generatedPdfFile');
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(generatedPdfFile.toString()),
-    ));
-  }
+  // convert(String cfData, String name) async {  // Name is File Name that you want to give the file
+  //   var targetPath = await _localPath;
+  //   var targetFileName = name;
+  //
+  //   var generatedPdfFile = await FlutterHtmlToPdf.convertFromHtmlContent(
+  //       cfData, targetPath!, targetFileName);
+  //   print('generatedPdfFile:$generatedPdfFile');
+  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //     content: Text(generatedPdfFile.toString()),
+  //   ));
+  // }
   Future<String?> get _localPath async {
     Directory? directory;
     try {
@@ -195,28 +195,28 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: GestureDetector(
                 onTap: ()async{
-                  print('Download');
-                  print('url:${await _controller.evaluateJavascript(source: "window.document.URL;")}');
-                  print('niti hello${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}');
-                  String html = await _controller.evaluateJavascript(source: "window.document.body.innerHTML;");
-                  print(html);
-                  convert(html,"File Name${DateTime.now().toString().split(' ').first}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}");
-                  var targetPath2 = await _localPath;
-                  File pdfFile() {
-                    if (Platform.isIOS) {
-                      return  File(targetPath2.toString()+"/"+ "File Name333" + '.pdf'); // for ios
-                    }
-                    else
-                    {
-                      print("aaaaa "+targetPath2.toString());
-                      // File('storage/emulated/0/Download/' + cfData + '.pdf')
-                      return File(targetPath2.toString()+"/"+ "File Name" + '.pdf'); // for android
-                    }
-                  }
-                  SfPdfViewer.file(
-                      pdfFile()
-                  );
-                  generateExampleDocument();
+                  // print('Download');
+                  // print('url:${await _controller.evaluateJavascript(source: "window.document.URL;")}');
+                  // print('niti hello${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}');
+                  // String html = await _controller.evaluateJavascript(source: "window.document.body.innerHTML;");
+                  // print(html);
+                  // convert(html,"File Name${DateTime.now().toString().split(' ').first}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}");
+                  // var targetPath2 = await _localPath;
+                  // File pdfFile() {
+                  //   if (Platform.isIOS) {
+                  //     return  File(targetPath2.toString()+"/"+ "File Name333" + '.pdf'); // for ios
+                  //   }
+                  //   else
+                  //   {
+                  //     print("aaaaa "+targetPath2.toString());
+                  //     // File('storage/emulated/0/Download/' + cfData + '.pdf')
+                  //     return File(targetPath2.toString()+"/"+ "File Name" + '.pdf'); // for android
+                  //   }
+                  // }
+                  // SfPdfViewer.file(
+                  //     pdfFile()
+                  // );
+                  // generateExampleDocument();
                   print('download_successfull..//:');
                   // Navigator.push(context, MaterialPageRoute(builder: (context)=> const AppsStorePage()));
                 },
