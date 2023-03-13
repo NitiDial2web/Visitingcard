@@ -20,11 +20,13 @@
     <application
         android:label="visiting_card"
         android:name="${applicationName}"
+        android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
+
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
@@ -54,5 +56,15 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="facebook_app_id" />
+<!--        <provider-->
+<!--            android:name="com.com.nine_am.app.flutter_inappwebview.InAppWebViewFileProvider"-->
+<!--            android:authorities="${applicationId}.flutter_inappwebview.fileprovider"-->
+<!--            android:exported="false"-->
+<!--            android:grantUriPermissions="true"-->
+<!--            tools:ignore="MissingClass">-->
+<!--            <meta-data-->
+<!--                android:name="android.support.FILE_PROVIDER_PATHS"-->
+<!--                android:resource="@xml/provider_paths" />-->
+<!--        </provider>-->
     </application>
 </manifest>
