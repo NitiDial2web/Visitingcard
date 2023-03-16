@@ -1,5 +1,5 @@
-
 import 'dart:io';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import 'package:aligned_dialog/aligned_dialog.dart';
 import 'package:flutter/foundation.dart';
@@ -9,7 +9,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+
+// import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
@@ -25,7 +26,8 @@ import 'package:visiting_card/screens/image_editor/image_text.dart';
 
 class EditorPage extends StatefulWidget {
   final File? imageBg;
-  const EditorPage({Key? key,this.imageBg}) : super(key: key);
+
+  const EditorPage({Key? key, this.imageBg}) : super(key: key);
 
   @override
   State<EditorPage> createState() => _EditorPageState();
@@ -40,8 +42,11 @@ class _EditorPageState extends State<EditorPage> {
   List<TextInfo> texts = [];
   int currentIndex = 0;
   final Future<SharedPreferences> prefs = SharedPreferences.getInstance();
-  late InAppWebViewController _controller;
+
+  // late InAppWebViewController _controller;
+  late WebViewController _controller;
   String url = "";
+
   // @override
   // void initState(){
   //   super.initState();
@@ -52,7 +57,7 @@ class _EditorPageState extends State<EditorPage> {
   // }
   Future<File?> cropimage({required File imagefile}) async {
     CroppedFile? croppedimage =
-    await ImageCropper().cropImage(sourcePath: imagefile.path);
+        await ImageCropper().cropImage(sourcePath: imagefile.path);
     if (croppedimage == null) return null;
     return File(croppedimage.path);
   }
@@ -119,7 +124,7 @@ class _EditorPageState extends State<EditorPage> {
   Future pickImageC() async {
     try {
       final XFile? image =
-      await ImagePicker().pickImage(source: ImageSource.camera);
+          await ImagePicker().pickImage(source: ImageSource.camera);
 
       if (image == null) return;
 
@@ -133,7 +138,7 @@ class _EditorPageState extends State<EditorPage> {
   Future pickImageC2() async {
     try {
       final XFile? image =
-      await ImagePicker().pickImage(source: ImageSource.camera);
+          await ImagePicker().pickImage(source: ImageSource.camera);
 
       if (image == null) return;
 
@@ -161,7 +166,7 @@ class _EditorPageState extends State<EditorPage> {
         ),
       );
       Navigator.of(context)
-      // ..pop()
+        // ..pop()
         ..pop();
     });
   }
@@ -181,7 +186,7 @@ class _EditorPageState extends State<EditorPage> {
         ),
       );
       Navigator.of(context)
-      // ..pop()
+        // ..pop()
         ..pop();
     });
   }
@@ -215,7 +220,7 @@ class _EditorPageState extends State<EditorPage> {
               ),
             ),
             onPressed: () => Navigator.of(context)
-            // ..pop()
+              // ..pop()
               ..pop(),
             child: const Text('Back'),
           ),
@@ -229,7 +234,7 @@ class _EditorPageState extends State<EditorPage> {
               ),
             ),
             onPressed: () =>
-            (edit) ? editText2(context, index!) : addNewText2(context),
+                (edit) ? editText2(context, index!) : addNewText2(context),
             child: const Text('Add Text'),
           ),
         ],
@@ -255,7 +260,7 @@ class _EditorPageState extends State<EditorPage> {
               ),
             ),
             onPressed: () => Navigator.of(context)
-            // ..pop()
+              // ..pop()
               ..pop(),
             child: const Text('Cancel'),
           ),
@@ -354,7 +359,7 @@ class _EditorPageState extends State<EditorPage> {
               height: 520,
             ),
             viewPort:
-            const CroppieViewPort(width: 480, height: 480, type: 'circle'),
+                const CroppieViewPort(width: 480, height: 480, type: 'circle'),
             enableExif: true,
             enableZoom: true,
             showZoomer: true,
@@ -543,197 +548,263 @@ class _EditorPageState extends State<EditorPage> {
     //     ),
     //   ),
     // );
-    return WillPopScope(
-      onWillPop: () async {
-        if(await _controller.canGoBack()){
-          print('niti');
-          _controller.goBack();
-          return false;
-        }
-        else{
-          print('niti else');
-          return true;
-        }
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('title'),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: GestureDetector(
-                onTap: () async {
-                  print('dialog');
-                  print('Download');
-                  print(
-                      'url:${await _controller.evaluateJavascript(source: "window.document.URL;")}');
-                  print(
-                      'niti hello${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}');
-                  String html = await _controller.evaluateJavascript(
-                      source: "window.document.body.innerHTML;");
-                  print(html);
-                  convert(html,
-                      "File Name${DateTime.now().toString().split(' ').first}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}");
-                  var targetPath2 = await _localPath;
-                  File pdfFile() {
-                    if (Platform.isIOS) {
-                      return File(targetPath2.toString() +
-                          "/" +
-                          "File Name333" +
-                          '.pdf'); // for ios
-                    } else {
-                      print("aaaaa $targetPath2");
-                      // File('storage/emulated/0/Download/' + cfData + '.pdf')
-                      return File(targetPath2.toString() +
-                          "/" +
-                          "File Name" +
-                          '.pdf'); // for android
-                    }
-                  }
-
-                  SfPdfViewer.file(pdfFile());
-                  // generateExampleDocument();
-                  print('download_successfull..//:');
-                  // downloadDialog();
-                  // Navigator.push(context, MaterialPageRoute(builder: (context)=> const AppsStorePage()));
-                },
-                child: const Icon(Icons.download),
-              ),
-            )
-          ],
-        ),
-        body: InAppWebView(
-          initialUrlRequest: URLRequest(
-              url: Uri.parse(
-                // 'https://pixlr.com/x/')),
-    // 'https://practice.geeksforgeeks.org/courses/complete-interview-preparation?source=google&medium=cpc&device=c&keyword=gfg&matchtype=b&campaignid=18447701680&adgroup=147691667674&gclid=Cj0KCQjwk7ugBhDIARIsAGuvgPZnBxRx5yX-Tu6g8tL2hfZCRp7rM3S49HN3TXNZzTOOaMi_d_8wReQaAnAvEALw_wcB')),
-                  'https://visitmysite.in/pixie/index.html')),
-          // 'https://visitmysite.in/visitingcard/public/visiting_card_html/${widget.categoryName}/${widget.image}.html')),
-          // initialHeaders: {},
-          initialOptions: InAppWebViewGroupOptions(
-            crossPlatform: InAppWebViewOptions(
-              // debuggingEnabled: true,
-                javaScriptEnabled: true,
-                clearCache: false,
-                useOnDownloadStart: true,
-                allowFileAccessFromFileURLs: true,
-                allowUniversalAccessFromFileURLs: true),
-            android: AndroidInAppWebViewOptions(
-              useHybridComposition: true,
-            ),
-          ),
-          // gestureNavigationEnabled: true,
-          gestureRecognizers: Set()
-            ..add(Factory<VerticalDragGestureRecognizer>(
-                    () => VerticalDragGestureRecognizer()
-                  ..onDown = (DragDownDetails dragDownDetails) {
-                    _controller.getScrollY().then((value) {
-                      if (value == 0 &&
-                          dragDownDetails.globalPosition.direction < 1) {
-                        _controller.reload();
+    return
+        // WillPopScope(
+        // onWillPop: () async {
+        //   if(await _controller.canGoBack()){
+        //     print('niti');
+        //     _controller.goBack();
+        //     return false;
+        //   }
+        //   else{
+        //     print('niti else');
+        //     return true;
+        //   }
+        // },
+        // child:
+        Scaffold(
+            appBar: AppBar(
+              title: const Text('title'),
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: GestureDetector(
+                    onTap: () async {
+                      print('dialog');
+                      print('Download');
+                      print(
+                          'url:${await _controller.runJavascriptReturningResult("window.document.URL;")}');
+                      print(
+                          'niti hello${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}');
+                      String html =
+                          await _controller.runJavascriptReturningResult(
+                              "window.document.body.innerHTML;");
+                      print(html);
+                      convert(html,
+                          "File Name${DateTime.now().toString().split(' ').first}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}");
+                      var targetPath2 = await _localPath;
+                      File pdfFile() {
+                        if (Platform.isIOS) {
+                          return File(targetPath2.toString() +
+                              "/" +
+                              "File Name333" +
+                              '.pdf'); // for ios
+                        } else {
+                          print("aaaaa $targetPath2");
+                          // File('storage/emulated/0/Download/' + cfData + '.pdf')
+                          return File(targetPath2.toString() +
+                              "/" +
+                              "File Name" +
+                              '.pdf'); // for android
+                        }
                       }
-                    });
-                  }))
-            ..add(Factory<LongPressGestureRecognizer>(
-                    () => LongPressGestureRecognizer())),
-          onWebViewCreated: (InAppWebViewController webViewController) async{
-            _controller = webViewController;
-            // await _controller.evaluateJavascript(source: "window.document.URL;");
-            // print('web page: ${_controller.evaluateJavascript(source: "window.document.URL;")}');
-          },
-          onLoadStop: (InAppWebViewController controller, Uri? url) async {
-            // setState(() {
-            //   this.url = url.toString();
-            // });
-            await controller.evaluateJavascript(source: "window.localStorage.setItem('Item 1', 'localStorage value! hiii')");
-            // await controller.evaluateJavascript(source: "alert(window.localStorage.getItem('Item 1'))");
-            await controller.evaluateJavascript(source: "window.sessionStorage.setItem('Item 2', 'sessionStorage value! hiii')");
-          },
-          onDownloadStartRequest: (controller, url) async {
-            print("onDownloadStart $url");
-            final taskId = await FlutterDownloader.enqueue(
-              url: url.toString(),
-              savedDir: (await getExternalStorageDirectory())!.path,
-              showNotification: true, // show download progress in status bar (for Android)
-              openFileFromNotification: true, // click on notification to open downloaded file (for Android)
-            );
-          },
-//                       onLoadStop: (controller, url) async {
-//                         if(await _controller.evaluateJavascript(source: "window.document.URL;") != "https://qswappweb.com/resumebuilder/public/featured"){
-//                               // var result = await controller.evaluateJavascript(
-//                               //     source: "1 + 1");
-//                               // print(result.runtimeType); // int
-//                               // print(result); //2
-//                           var result = _controller.evaluateJavascript(source: '''
-//   var fileInput = document.createElement('input');
-//   fileInput.type = 'file';
-//   fileInput.accept = 'image/*';
-//   fileInput.onchange = () => {
-//     var file = fileInput.files[0];
-//     var reader = new FileReader();
-//     reader.readAsDataURL(file);
-//     reader.onload = () => {
-//       window.flutter_injector.get('ImagePicker').invokeMethod('pickImage', reader.result);
-//     };
-//   };
-//   fileInput.click();
-// ''');
-//                           print(result.toString());
-//                           print(result);
-//                         }
-//                       },
-          // onWebViewCreated: (InAppWebViewController controller) {
-          //   webView = controller;
-          // },
-          // onLoadStart: (InAppWebViewController controller, String url) {
-          //
-          // },
-          // onLoadStop: (InAppWebViewController controller, String url) {
-          //
-          // },
-          // onLoadStop: (controller, url) async {
-          //   var html = await controller.evaluateJavascript(
-          //       source: "window.document.getElementsByTagName('head')[0].outerHTML;");
-          //   //   source: "window.document.body.innerText;");
-          //   print("==========start================");
-          //   // catchtext = html;
-          //   print(':$html}');
-          //
-          // },
 
-          // onPageCommitVisible: (con,uri){
-          //   print("url ${uri.toString()}");
-          //   con.goBack();
-          // },
-          // onDownloadStartRequest: (controller, url) async {
-          //   print('Permission.storage.status:${await Permission.storage.status}');
-          //   // await checkPermission();
-          //   // print(await checkPermission());
-          //   print("onDownloadStart $url");
-          //   if(await Permission.storage.request().isGranted){
-          //     print('if true');
-          //         final taskId = await FlutterDownloader.enqueue(
-          //           url: 'https:\/\/qswappweb.com\/resumebuilder\/public\/uploads\/user_guide_image\/63b3eed2d1cef.png',
-          //               // 'https://qswappweb.com/resumebuilder/public/featured',
-          //           saveInPublicStorage: true,
-          //           savedDir:
-          //               (await getExternalStorageDirectory())!.path,
-          //           showNotification: true,
-          //           fileName: "Flamingo Order Details",
-          //           // show download progress in status bar (for Android)
-          //           openFileFromNotification:
-          //               true, // click on notification to open downloaded file (for Android)
-          //         );
-          //         print('taskId:$taskId');
-          //       }
-          //   else{
-          //     print('else false');
-          //     checkPermission();
-          //   }
-          //     },
-        ),
-      ),
-    );
+                      SfPdfViewer.file(pdfFile());
+                      // generateExampleDocument();
+                      print('download_successfull..//:');
+                      // downloadDialog();
+                      // Navigator.push(context, MaterialPageRoute(builder: (context)=> const AppsStorePage()));
+                    },
+                    child: const Icon(Icons.download),
+                  ),
+                )
+              ],
+            ),
+//         body: InAppWebView(
+//           initialUrlRequest: URLRequest(
+//               url: Uri.parse(
+//                 // 'https://pixlr.com/x/')),
+//     // 'https://practice.geeksforgeeks.org/courses/complete-interview-preparation?source=google&medium=cpc&device=c&keyword=gfg&matchtype=b&campaignid=18447701680&adgroup=147691667674&gclid=Cj0KCQjwk7ugBhDIARIsAGuvgPZnBxRx5yX-Tu6g8tL2hfZCRp7rM3S49HN3TXNZzTOOaMi_d_8wReQaAnAvEALw_wcB')),
+//                   'https://visitmysite.in/pixie/index.html')),
+//           // 'https://visitmysite.in/visitingcard/public/visiting_card_html/${widget.categoryName}/${widget.image}.html')),
+//           // initialHeaders: {},
+//           initialOptions: InAppWebViewGroupOptions(
+//             crossPlatform: InAppWebViewOptions(
+//               // debuggingEnabled: true,
+//                 javaScriptEnabled: true,
+//                 clearCache: false,
+//                 useOnDownloadStart: true,
+//                 useOnLoadResource: true,
+//                 allowFileAccessFromFileURLs: true,
+//                 allowUniversalAccessFromFileURLs: true),
+//             android: AndroidInAppWebViewOptions(
+//               useHybridComposition: true,
+//             ),
+//           ),
+//           // gestureNavigationEnabled: true,
+//           gestureRecognizers: Set()
+//             ..add(Factory<VerticalDragGestureRecognizer>(
+//                     () => VerticalDragGestureRecognizer()
+//                   ..onDown = (DragDownDetails dragDownDetails) {
+//                     _controller.getScrollY().then((value) {
+//                       if (value == 0 &&
+//                           dragDownDetails.globalPosition.direction < 1) {
+//                         _controller.reload();
+//                       }
+//                     });
+//                   }))
+//             ..add(Factory<LongPressGestureRecognizer>(
+//                     () => LongPressGestureRecognizer())),
+//           onWebViewCreated: (InAppWebViewController webViewController) async{
+//             _controller = webViewController;
+//             _controller.clearCache();
+//             // await _controller.evaluateJavascript(source: "window.document.URL;");
+//             // print('web page: ${_controller.evaluateJavascript(source: "window.document.URL;")}');
+//           },
+//           onLoadStop: (InAppWebViewController controller, Uri? url) async {
+//             // setState(() {
+//             //   this.url = url.toString();
+//             // });
+//             await controller.evaluateJavascript(source: "window.localStorage.setItem('Item 1', 'localStorage value! hiii')");
+//             // await controller.evaluateJavascript(source: "alert(window.localStorage.getItem('Item 1'))");
+//             await controller.evaluateJavascript(source: "window.sessionStorage.setItem('Item 2', 'sessionStorage value! hiii')");
+//           },
+//           onDownloadStartRequest: (controller, url) async {
+//             print("onDownloadStart $url");
+//             final taskId = await FlutterDownloader.enqueue(
+//               url: url.toString(),
+//               savedDir: (await getExternalStorageDirectory())!.path,
+//               showNotification: true, // show download progress in status bar (for Android)
+//               openFileFromNotification: true, // click on notification to open downloaded file (for Android)
+//             );
+//           },
+// //                       onLoadStop: (controller, url) async {
+// //                         if(await _controller.evaluateJavascript(source: "window.document.URL;") != "https://qswappweb.com/resumebuilder/public/featured"){
+// //                               // var result = await controller.evaluateJavascript(
+// //                               //     source: "1 + 1");
+// //                               // print(result.runtimeType); // int
+// //                               // print(result); //2
+// //                           var result = _controller.evaluateJavascript(source: '''
+// //   var fileInput = document.createElement('input');
+// //   fileInput.type = 'file';
+// //   fileInput.accept = 'image/*';
+// //   fileInput.onchange = () => {
+// //     var file = fileInput.files[0];
+// //     var reader = new FileReader();
+// //     reader.readAsDataURL(file);
+// //     reader.onload = () => {
+// //       window.flutter_injector.get('ImagePicker').invokeMethod('pickImage', reader.result);
+// //     };
+// //   };
+// //   fileInput.click();
+// // ''');
+// //                           print(result.toString());
+// //                           print(result);
+// //                         }
+// //                       },
+//           // onWebViewCreated: (InAppWebViewController controller) {
+//           //   webView = controller;
+//           // },
+//           // onLoadStart: (InAppWebViewController controller, String url) {
+//           //
+//           // },
+//           // onLoadStop: (InAppWebViewController controller, String url) {
+//           //
+//           // },
+//           // onLoadStop: (controller, url) async {
+//           //   var html = await controller.evaluateJavascript(
+//           //       source: "window.document.getElementsByTagName('head')[0].outerHTML;");
+//           //   //   source: "window.document.body.innerText;");
+//           //   print("==========start================");
+//           //   // catchtext = html;
+//           //   print(':$html}');
+//           //
+//           // },
+//
+//           // onPageCommitVisible: (con,uri){
+//           //   print("url ${uri.toString()}");
+//           //   con.goBack();
+//           // },
+//           // onDownloadStartRequest: (controller, url) async {
+//           //   print('Permission.storage.status:${await Permission.storage.status}');
+//           //   // await checkPermission();
+//           //   // print(await checkPermission());
+//           //   print("onDownloadStart $url");
+//           //   if(await Permission.storage.request().isGranted){
+//           //     print('if true');
+//           //         final taskId = await FlutterDownloader.enqueue(
+//           //           url: 'https:\/\/qswappweb.com\/resumebuilder\/public\/uploads\/user_guide_image\/63b3eed2d1cef.png',
+//           //               // 'https://qswappweb.com/resumebuilder/public/featured',
+//           //           saveInPublicStorage: true,
+//           //           savedDir:
+//           //               (await getExternalStorageDirectory())!.path,
+//           //           showNotification: true,
+//           //           fileName: "Flamingo Order Details",
+//           //           // show download progress in status bar (for Android)
+//           //           openFileFromNotification:
+//           //               true, // click on notification to open downloaded file (for Android)
+//           //         );
+//           //         print('taskId:$taskId');
+//           //       }
+//           //   else{
+//           //     print('else false');
+//           //     checkPermission();
+//           //   }
+//           //     },
+//         ),
+            body: WebView(
+              key: UniqueKey(),
+              // initialUrl:'https://freshly.luckistore.in/api/privacy_policy',
+              initialUrl: 'https://visitmysite.in/pixie/index.html',
+              // initialUrl: 'https://visitmysite.in/visitingcard/public/featured',
+              javascriptMode: JavascriptMode.unrestricted,
+              onPageFinished: (String url) {
+                print('Page finished loading: $url');
+                // setState(() {
+                //   isLoading = false;
+                // });
+              },
+              onWebViewCreated: (WebViewController webViewController) async{
+                _controller = webViewController;
+                // WebView webView = (WebView) findViewById(R.id.webView);
+                // WebSettings webSettings = webView.getSettings();
+                // webSettings.setJavaScriptEnabled(true);
+                // webSettings.setDomStorageEnabled(true);
+                // webview.getsettings().setdomstorageenabled(true)
+                await _controller.runJavascriptReturningResult( "window.localStorage.setItem('key', 'localStorage value!')");
+                await _controller.runJavascriptReturningResult( "alert(window.localStorage.getItem('key'))");
+                await _controller.runJavascript(
+                    'sessionStorage.setItem("userCode", "000"); sessionStorage.setItem("role", "40");');
+              },
+              // gestureNavigationEnabled: true,
+              // gestureRecognizers: Set()
+              //   ..add(Factory<VerticalDragGestureRecognizer>(() =>
+              //   VerticalDragGestureRecognizer()
+              //     ..onDown =
+              //         (DragDownDetails dragDownDetails) {
+              //       _controller.getScrollY().then((value) {
+              //         if (value == 0 &&
+              //             dragDownDetails
+              //                 .globalPosition.direction <
+              //                 1) {
+              //           _controller.reload();
+              //         }
+              //       });
+              //     }))
+              //   ..add(Factory<LongPressGestureRecognizer>(() => LongPressGestureRecognizer())),
+              onWebResourceError: (WebResourceError error) {
+                print("WebresourceError occured!");
+                // setState(() {
+                //   appBarColor = Colors.red;
+                //
+                // });
+              },
+              // gestureNavigationEnabled: true,
+              // gestureRecognizers: Set()
+              //   ..add(Factory<VerticalDragGestureRecognizer>(
+              //       () => VerticalDragGestureRecognizer()
+              //         ..onDown = (DragDownDetails dragDownDetails) {
+              //           _controller.getScrollY().then((value) {
+              //             if (value == 0 &&
+              //                 dragDownDetails.globalPosition.direction < 1) {
+              //               _controller.reload();
+              //             }
+              //           });
+              //         }))
+              //   ..add(Factory<LongPressGestureRecognizer>(
+              //       () => LongPressGestureRecognizer())),
+            ));
+    // );
     // ignore: unnecessary_cast
   }
 
@@ -944,44 +1015,47 @@ class _EditorPageState extends State<EditorPage> {
                             ),
                             actions: <Widget>[
                               SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
+                                scrollDirection: Axis.horizontal,
                                 child: Row(
                                   children: [
                                     ListView.separated(
                                       scrollDirection: Axis.horizontal,
                                       shrinkWrap: true,
                                       itemCount: 20,
-                                      separatorBuilder: (_, __) => const Divider(),
+                                      separatorBuilder: (_, __) =>
+                                          const Divider(),
                                       itemBuilder: (context, int index) {
                                         return Container(
-                                          margin:
-                                          const EdgeInsets.only(top: 0, left: 10),
+                                          margin: const EdgeInsets.only(
+                                              top: 0, left: 10),
                                           height: 30,
                                           width: 30,
                                           child: GestureDetector(
-                                              onTap: () =>
-                                                  changeTextColor(Colors.red.shade50),
+                                              onTap: () => changeTextColor(
+                                                  Colors.red.shade50),
                                               child: CircleAvatar(
-                                                backgroundColor: Colors.red.shade50,
+                                                backgroundColor:
+                                                    Colors.red.shade50,
                                               )),
                                         );
                                       },
                                     ),
                                     Container(
-                                      margin:
-                                      const EdgeInsets.only(top: 0, left: 10),
+                                      margin: const EdgeInsets.only(
+                                          top: 0, left: 10),
                                       height: 30,
                                       width: 30,
                                       child: GestureDetector(
-                                          onTap: () =>
-                                              changeTextColor(Colors.yellow.shade50),
+                                          onTap: () => changeTextColor(
+                                              Colors.yellow.shade50),
                                           child: CircleAvatar(
-                                            backgroundColor: Colors.yellow.shade50,
+                                            backgroundColor:
+                                                Colors.yellow.shade50,
                                           )),
                                     ),
                                     Container(
-                                      margin:
-                                      const EdgeInsets.only(top: 0, left: 10),
+                                      margin: const EdgeInsets.only(
+                                          top: 0, left: 10),
                                       height: 30,
                                       width: 30,
                                       child: GestureDetector(
@@ -992,8 +1066,8 @@ class _EditorPageState extends State<EditorPage> {
                                           )),
                                     ),
                                     Container(
-                                      margin:
-                                      const EdgeInsets.only(top: 0, left: 10),
+                                      margin: const EdgeInsets.only(
+                                          top: 0, left: 10),
                                       height: 30,
                                       width: 30,
                                       child: GestureDetector(
@@ -1004,8 +1078,8 @@ class _EditorPageState extends State<EditorPage> {
                                           )),
                                     ),
                                     Container(
-                                      margin:
-                                      const EdgeInsets.only(top: 0, left: 10),
+                                      margin: const EdgeInsets.only(
+                                          top: 0, left: 10),
                                       height: 30,
                                       width: 30,
                                       child: GestureDetector(
@@ -1016,8 +1090,8 @@ class _EditorPageState extends State<EditorPage> {
                                           )),
                                     ),
                                     Container(
-                                      margin:
-                                      const EdgeInsets.only(top: 0, left: 10),
+                                      margin: const EdgeInsets.only(
+                                          top: 0, left: 10),
                                       height: 30,
                                       width: 30,
                                       child: GestureDetector(
@@ -1028,8 +1102,8 @@ class _EditorPageState extends State<EditorPage> {
                                           )),
                                     ),
                                     Container(
-                                      margin:
-                                      const EdgeInsets.only(top: 0, left: 10),
+                                      margin: const EdgeInsets.only(
+                                          top: 0, left: 10),
                                       height: 30,
                                       width: 30,
                                       child: GestureDetector(
@@ -1040,8 +1114,8 @@ class _EditorPageState extends State<EditorPage> {
                                           )),
                                     ),
                                     Container(
-                                      margin:
-                                      const EdgeInsets.only(top: 0, left: 10),
+                                      margin: const EdgeInsets.only(
+                                          top: 0, left: 10),
                                       height: 30,
                                       width: 30,
                                       child: GestureDetector(
