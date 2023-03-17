@@ -756,15 +756,19 @@ class _EditorPageState extends State<EditorPage> {
               },
               onWebViewCreated: (WebViewController webViewController) async{
                 _controller = webViewController;
+                var localStorageValue = await _controller.runJavascriptReturningResult('window.localStorage.getItem("my_key")');
+                print('localStorageValue:$localStorageValue');
+                // _controller.settings()
+                //     .setDomStorageEnabled(true);
                 // WebView webView = (WebView) findViewById(R.id.webView);
                 // WebSettings webSettings = webView.getSettings();
                 // webSettings.setJavaScriptEnabled(true);
                 // webSettings.setDomStorageEnabled(true);
                 // webview.getsettings().setdomstorageenabled(true)
-                await _controller.runJavascriptReturningResult( "window.localStorage.setItem('key', 'localStorage value!')");
-                await _controller.runJavascriptReturningResult( "alert(window.localStorage.getItem('key'))");
-                await _controller.runJavascript(
-                    'sessionStorage.setItem("userCode", "000"); sessionStorage.setItem("role", "40");');
+                // await _controller.runJavascriptReturningResult( "window.localStorage.setItem('key', 'localStorage value!')");
+                // await _controller.runJavascriptReturningResult( "alert(window.localStorage.getItem('key'))");
+                // await _controller.runJavascript(
+                //     'sessionStorage.setItem("userCode", "000"); sessionStorage.setItem("role", "40");');
               },
               // gestureNavigationEnabled: true,
               // gestureRecognizers: Set()

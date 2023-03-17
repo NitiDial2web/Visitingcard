@@ -64,6 +64,7 @@ dependencies:
 #  path_provider_ex: ^1.0.1
   dio: ^5.0.2
   external_path: ^1.0.3
+  flutter_plugin_android_lifecycle: ^2.0.9
 
 dev_dependencies:
   flutter_test:
