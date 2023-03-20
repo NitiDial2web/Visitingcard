@@ -23,6 +23,7 @@ import 'package:visiting_card/screens/image_editor/effects.dart';
 import 'package:visiting_card/screens/image_editor/text_info.dart';
 import 'package:visiting_card/screens/image_editor/utils.dart';
 import 'package:visiting_card/screens/image_editor/image_text.dart';
+// import 'package:webview_flutter_plus/webview_flutter_plus.dart';
 
 class EditorPage extends StatefulWidget {
   final File? imageBg;
@@ -46,7 +47,7 @@ class _EditorPageState extends State<EditorPage> {
   // late InAppWebViewController _controller;
   late WebViewController _controller;
   String url = "";
-
+  // WebViewPlusController? _controller;
   // @override
   // void initState(){
   //   super.initState();
@@ -566,48 +567,48 @@ class _EditorPageState extends State<EditorPage> {
             appBar: AppBar(
               title: const Text('title'),
               actions: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: GestureDetector(
-                    onTap: () async {
-                      print('dialog');
-                      print('Download');
-                      print(
-                          'url:${await _controller.runJavascriptReturningResult("window.document.URL;")}');
-                      print(
-                          'niti hello${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}');
-                      String html =
-                          await _controller.runJavascriptReturningResult(
-                              "window.document.body.innerHTML;");
-                      print(html);
-                      convert(html,
-                          "File Name${DateTime.now().toString().split(' ').first}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}");
-                      var targetPath2 = await _localPath;
-                      File pdfFile() {
-                        if (Platform.isIOS) {
-                          return File(targetPath2.toString() +
-                              "/" +
-                              "File Name333" +
-                              '.pdf'); // for ios
-                        } else {
-                          print("aaaaa $targetPath2");
-                          // File('storage/emulated/0/Download/' + cfData + '.pdf')
-                          return File(targetPath2.toString() +
-                              "/" +
-                              "File Name" +
-                              '.pdf'); // for android
-                        }
-                      }
-
-                      SfPdfViewer.file(pdfFile());
-                      // generateExampleDocument();
-                      print('download_successfull..//:');
-                      // downloadDialog();
-                      // Navigator.push(context, MaterialPageRoute(builder: (context)=> const AppsStorePage()));
-                    },
-                    child: const Icon(Icons.download),
-                  ),
-                )
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                //   child: GestureDetector(
+                //     onTap: () async {
+                //       print('dialog');
+                //       print('Download');
+                //       print(
+                //           'url:${await _controller.runJavascriptReturningResult("window.document.URL;")}');
+                //       print(
+                //           'niti hello${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}');
+                //       String html =
+                //           await _controller.runJavascriptReturningResult(
+                //               "window.document.body.innerHTML;");
+                //       print(html);
+                //       convert(html,
+                //           "File Name${DateTime.now().toString().split(' ').first}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}");
+                //       var targetPath2 = await _localPath;
+                //       File pdfFile() {
+                //         if (Platform.isIOS) {
+                //           return File(targetPath2.toString() +
+                //               "/" +
+                //               "File Name333" +
+                //               '.pdf'); // for ios
+                //         } else {
+                //           print("aaaaa $targetPath2");
+                //           // File('storage/emulated/0/Download/' + cfData + '.pdf')
+                //           return File(targetPath2.toString() +
+                //               "/" +
+                //               "File Name" +
+                //               '.pdf'); // for android
+                //         }
+                //       }
+                //
+                //       SfPdfViewer.file(pdfFile());
+                //       // generateExampleDocument();
+                //       print('download_successfull..//:');
+                //       // downloadDialog();
+                //       // Navigator.push(context, MaterialPageRoute(builder: (context)=> const AppsStorePage()));
+                //     },
+                //     child: const Icon(Icons.download),
+                //   ),
+                // )
               ],
             ),
 //         body: InAppWebView(
@@ -742,6 +743,36 @@ class _EditorPageState extends State<EditorPage> {
 //           //   }
 //           //     },
 //         ),
+//         body: WebViewPlus(
+//           initialUrl: 'https://visitmysite.in/pixie/index.html',
+//           javascriptMode: JavascriptMode.unrestricted,
+//           // javascriptChannels: null,
+//     onPageFinished: (String url) {
+//         print('Page finished loading: $url');
+//         // setState(() {
+//         //   isLoading = false;
+//         // });
+//       },
+//           onWebViewCreated: (WebViewPlusController webViewController) async{
+//             _controller = webViewController;
+//             // _controller!.loadUrl('https://visitmysite.in/pixie/index.html');
+//             // var localStorageValue = await _controller!.webViewController.loadFile('Phone/Download/IMG_2305.jpg');
+//             // var localStorageValue = await _controller.runJavascriptReturningResult('window.localStorage.getItem("image")');
+//             print('localStorageValue:');
+//             // _controller.settings()
+//             //     .setDomStorageEnabled(true);
+//             // WebView webView = (WebView) findViewById(R.id.webView);
+//             // WebSettings webSettings = webView.getSettings();
+//             // webSettings.setJavaScriptEnabled(true);
+//             // webSettings.setDomStorageEnabled(true);
+//             // webview.getsettings().setdomstorageenabled(true)
+//             // await _controller.runJavascriptReturningResult( "window.localStorage.setItem('key', 'localStorage value!')");
+//             // await _controller.runJavascriptReturningResult( "alert(window.localStorage.getItem('key'))");
+//             // await _controller.runJavascript(
+//             //     'sessionStorage.setItem("userCode", "000"); sessionStorage.setItem("role", "40");');
+//           },
+//         )
+//         );
             body: WebView(
               key: UniqueKey(),
               // initialUrl:'https://freshly.luckistore.in/api/privacy_policy',
@@ -756,7 +787,7 @@ class _EditorPageState extends State<EditorPage> {
               },
               onWebViewCreated: (WebViewController webViewController) async{
                 _controller = webViewController;
-                var localStorageValue = await _controller.runJavascriptReturningResult('window.localStorage.getItem("my_key")');
+                var localStorageValue = await _controller.runJavascriptReturningResult('window.localStorage.getItem("image")');
                 print('localStorageValue:$localStorageValue');
                 // _controller.settings()
                 //     .setDomStorageEnabled(true);
