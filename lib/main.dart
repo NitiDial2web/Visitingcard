@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:visiting_card/screens/splash_screen.dart';
 
-void main() {
+void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  // if (Platform.isAndroid) {
-  //   // await AndroidWebStorageManager();
-  //   await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
-  // }
+  if (Platform.isAndroid) {
+    // await AndroidWebStorageManager();
+    await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
+  }
   runApp(const MyApp());
 }
 
