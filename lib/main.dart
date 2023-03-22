@@ -1,11 +1,30 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:visiting_card/screens/splash_screen.dart';
 
+class DownloadClass{
+  static void callback(String id,DownloadTaskStatus status, int progress){
+    print('Download Status: $status');
+    print('Download Progress: $progress');
+  }
+}
+
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  FlutterDownloader.initialize(
+      debug: true // optional: set false to disable printing logs to console
+  );
+  FlutterDownloader.registerCallback(DownloadClass.callback);
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarBrightness: Brightness.light,
+    statusBarColor: Colors.transparent,
+    systemNavigationBarIconBrightness: Brightness.light
+  ));
   if (Platform.isAndroid) {
     // await AndroidWebStorageManager();
     await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);

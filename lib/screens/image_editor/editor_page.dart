@@ -19,6 +19,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:visiting_card/screens/image_editor/effects.dart';
 import 'package:visiting_card/screens/image_editor/text_info.dart';
 import 'package:visiting_card/screens/image_editor/utils.dart';
@@ -34,8 +35,8 @@ class EditorPage extends StatefulWidget {
   State<EditorPage> createState() => _EditorPageState();
 }
 
-class _EditorPageState extends State<EditorPage> with
-    AutomaticKeepAliveClientMixin{
+class _EditorPageState extends State<EditorPage>
+    with AutomaticKeepAliveClientMixin<EditorPage> {
   File? image;
   TextEditingController textEditingController = TextEditingController();
   TextEditingController creatorText = TextEditingController();
@@ -46,8 +47,10 @@ class _EditorPageState extends State<EditorPage> with
   final Future<SharedPreferences> prefs = SharedPreferences.getInstance();
 
   late InAppWebViewController _controller;
+
   // late WebViewController _controller;
-  String url = "";
+  String uri = "https://visitmysite.in/pixie/index.html";
+
   // WebViewPlusController? _controller;
   // @override
   // void initState(){
@@ -411,6 +414,13 @@ class _EditorPageState extends State<EditorPage> with
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    WidgetsFlutterBinding.ensureInitialized();
+  }
+
+  @override
   Widget build(BuildContext context) {
     print('image:$image');
     // return Scaffold(
@@ -550,165 +560,204 @@ class _EditorPageState extends State<EditorPage> with
     //     ),
     //   ),
     // );
-    return
-        // WillPopScope(
-        // onWillPop: () async {
-        //   if(await _controller.canGoBack()){
-        //     print('niti');
-        //     _controller.goBack();
-        //     return false;
-        //   }
-        //   else{
-        //     print('niti else');
-        //     return true;
-        //   }
-        // },
-        // child:
-        Scaffold(
-            appBar: AppBar(
-              title: const Text('title'),
-              actions: [
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                //   child: GestureDetector(
-                //     onTap: () async {
-                //       print('dialog');
-                //       print('Download');
-                //       print(
-                //           'url:${await _controller.evaluateJavascript(source: "window.document.URL;")}');
-                //       print(
-                //           'niti hello${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}');
-                //       String html =
-                //       await _controller.evaluateJavascript(
-                //           source: "window.document.body.innerHTML;");
-                //       print(html);
-                //       convert(html,
-                //           "File Name${DateTime.now().toString().split(' ').first}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}");
-                //       var targetPath2 = await _localPath;
-                //       File pdfFile() {
-                //         if (Platform.isIOS) {
-                //           return File(targetPath2.toString() +
-                //               "/" +
-                //               "File Name333" +
-                //               '.pdf'); // for ios
-                //         } else {
-                //           print("aaaaa $targetPath2");
-                //           // File('storage/emulated/0/Download/' + cfData + '.pdf')
-                //           return File(targetPath2.toString() +
-                //               "/" +
-                //               "File Name" +
-                //               '.pdf'); // for android
-                //         }
-                //       }
-                //
-                //       SfPdfViewer.file(pdfFile());
-                //       // generateExampleDocument();
-                //       print('download_successfull..//:');
-                //       // downloadDialog();
-                //       // Navigator.push(context, MaterialPageRoute(builder: (context)=> const AppsStorePage()));
-                //     },
-                //     child: const Icon(Icons.download),
-                //   ),
-                // )
-              ],
-            ),
-        body: InAppWebView(
-          initialUrlRequest: URLRequest(
-              url: Uri.parse(
-                // 'https://pixlr.com/x/')),
-    // 'https://practice.geeksforgeeks.org/courses/complete-interview-preparation?source=google&medium=cpc&device=c&keyword=gfg&matchtype=b&campaignid=18447701680&adgroup=147691667674&gclid=Cj0KCQjwk7ugBhDIARIsAGuvgPZnBxRx5yX-Tu6g8tL2hfZCRp7rM3S49HN3TXNZzTOOaMi_d_8wReQaAnAvEALw_wcB')),
-                  'https://visitmysite.in/pixie/index.html')),
-          // 'https://visitmysite.in/visitingcard/public/visiting_card_html/${widget.categoryName}/${widget.image}.html')),
-          // initialHeaders: {},
-          initialOptions: InAppWebViewGroupOptions(
-            crossPlatform: InAppWebViewOptions(
-              // debuggingEnabled: true,
-                javaScriptEnabled: true,
-                clearCache: false,
-                useOnDownloadStart: true,
-                useOnLoadResource: true,
-                allowFileAccessFromFileURLs: true,
-                allowUniversalAccessFromFileURLs: true),
-            android: AndroidInAppWebViewOptions(
-              useHybridComposition: true,
-            ),
+    return WillPopScope(
+        onWillPop: () async {
+          print('back button11111 : ${await _controller.canGoBack()}');
+          if (await _controller.canGoBack()) {
+            print('niti');
+            _controller.goBack();
+            return true;
+          } else {
+            print('niti else');
+            return false;
+          }
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            title: const Text('title'),
+            leading: IconButton(
+                onPressed: () async {
+                  print('back button : ${await _controller.canGoBack()}');
+                  if (1 == 1) {
+                    print('niti');
+                    // _controller.goBack();
+                    Navigator.pop(context);
+                    // return false;
+                  }
+                  // _controller.goBack();
+                },
+                icon: Icon(Icons.arrow_back)),
+            actions: [
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              //   child: GestureDetector(
+              //     onTap: () async {
+              //       print('dialog');
+              //       print('Download');
+              //       print(
+              //           'url:${await _controller.evaluateJavascript(source: "window.document.URL;")}');
+              //       print(
+              //           'niti hello${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}');
+              //       String html =
+              //       await _controller.evaluateJavascript(
+              //           source: "window.document.body.innerHTML;");
+              //       print(html);
+              //       convert(html,
+              //           "File Name${DateTime.now().toString().split(' ').first}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}");
+              //       var targetPath2 = await _localPath;
+              //       File pdfFile() {
+              //         if (Platform.isIOS) {
+              //           return File(targetPath2.toString() +
+              //               "/" +
+              //               "File Name333" +
+              //               '.pdf'); // for ios
+              //         } else {
+              //           print("aaaaa $targetPath2");
+              //           // File('storage/emulated/0/Download/' + cfData + '.pdf')
+              //           return File(targetPath2.toString() +
+              //               "/" +
+              //               "File Name" +
+              //               '.pdf'); // for android
+              //         }
+              //       }
+              //
+              //       SfPdfViewer.file(pdfFile());
+              //       // generateExampleDocument();
+              //       print('download_successfull..//:');
+              //       // downloadDialog();
+              //       // Navigator.push(context, MaterialPageRoute(builder: (context)=> const AppsStorePage()));
+              //     },
+              //     child: const Icon(Icons.download),
+              //   ),
+              // )
+            ],
           ),
-          // gestureNavigationEnabled: true,
-          gestureRecognizers: Set()
-            ..add(Factory<VerticalDragGestureRecognizer>(
-                    () => VerticalDragGestureRecognizer()
-                  ..onDown = (DragDownDetails dragDownDetails) {
-                    _controller.getScrollY().then((value) {
-                      if (value == 0 &&
-                          dragDownDetails.globalPosition.direction < 1) {
-                        _controller.reload();
-                      }
-                    });
-                  }))
-            ..add(Factory<LongPressGestureRecognizer>(
-                    () => LongPressGestureRecognizer())),
-          onWebViewCreated: (InAppWebViewController webViewController) async{
-            _controller = webViewController;
-            // try {
-            //   // get the access token
-            //   final token = await getToken();
-            //
-            //   // get the CookieManager instance
-            //   CookieManager cookieManager = CookieManager.instance();
-            //
-            //   // set the access token
-            //   await cookieManager.setCookie(
-            //       url: 'https://visitmysite.in/pixie/index.html',
-            //       name: "accessToken",
-            //       value: token,
-            //       isSecure: true,
-            //       isHttpOnly: false,
-            //       sameSite: HTTPCookieSameSitePolicy.NONE
+          body: InAppWebView(
+            initialUrlRequest: URLRequest(url: Uri.parse(
+                // 'https://pixlr.com/x/')),
+                // 'https://practice.geeksforgeeks.org/courses/complete-interview-preparation?source=google&medium=cpc&device=c&keyword=gfg&matchtype=b&campaignid=18447701680&adgroup=147691667674&gclid=Cj0KCQjwk7ugBhDIARIsAGuvgPZnBxRx5yX-Tu6g8tL2hfZCRp7rM3S49HN3TXNZzTOOaMi_d_8wReQaAnAvEALw_wcB')),
+                // 'https://visitmysite.in/pixie/index.html')),
+    'https://proof.ovh.net/files/10Mb.dat')),
+            // 'https://visitmysite.in/visitingcard/public/visiting_card_html/${widget.categoryName}/${widget.image}.html')),
+            // initialHeaders: {},
+            initialOptions: InAppWebViewGroupOptions(
+              crossPlatform: InAppWebViewOptions(
+                  // debuggingEnabled: true,
+                  //   javaScriptEnabled: true,
+                  //   clearCache: false,
+                  useOnDownloadStart: true,
+                  // useOnLoadResource: true,
+                  allowFileAccessFromFileURLs: true,
+                  allowUniversalAccessFromFileURLs: true),
+              android: AndroidInAppWebViewOptions(
+                useHybridComposition: true,
+              ),
+            ),
+            // gestureNavigationEnabled: true,
+            gestureRecognizers: Set()
+              ..add(Factory<VerticalDragGestureRecognizer>(
+                  () => VerticalDragGestureRecognizer()
+                    ..onUpdate = (DragUpdateDetails dragDownDetails) {
+                      _controller.getScrollY().then((value) {
+                        print('reload option');
+                        if (value == 0 &&
+                            dragDownDetails.globalPosition.direction < 1) {
+                          print('reloading');
+                          _controller.reload();
+                        }
+                      });
+                    }))
+              ..add(Factory<LongPressGestureRecognizer>(
+                  () => LongPressGestureRecognizer())),
+            onWebViewCreated: (InAppWebViewController webViewController) async {
+              _controller = webViewController;
+              // try {
+              //   // get the access token
+              //   final token = await getToken();
+              //
+              //   // get the CookieManager instance
+              //   CookieManager cookieManager = CookieManager.instance();
+              //
+              //   // set the access token
+              //   await cookieManager.setCookie(
+              //       url: 'https://visitmysite.in/pixie/index.html',
+              //       name: "accessToken",
+              //       value: token,
+              //       isSecure: true,
+              //       isHttpOnly: false,
+              //       sameSite: HTTPCookieSameSitePolicy.NONE
+              //   );
+              //
+              //   // then load your initial URL here
+              //   // await _webViewController.loadUrl(url: widget.url);
+              // } catch (e) {
+              //   print(e.toString());
+              // }
+              // _controller.clearCache();
+              // await _controller.evaluateJavascript(source: "window.document.URL;");
+              // print('web page: ${_controller.evaluateJavascript(source: "window.document.URL;")}');
+            },
+            onLoadStop: (InAppWebViewController controller, Uri? url) async {
+              // setState(() {
+              //   this.url = url.toString();
+              // });
+              await controller.evaluateJavascript(
+                  source:
+                      "window.localStorage.setItem('Item 1', 'localStorage value! hiii')");
+              // await controller.evaluateJavascript(source: "alert(window.localStorage.getItem('Item 1'))");
+              await controller.evaluateJavascript(
+                  source:
+                      "window.sessionStorage.setItem('Item 2', 'sessionStorage value! hiii')");
+            },
+            onDownloadStart: (controller, url) async {
+              try {
+                print("onDownloadStart ${url}");
+                // print('path : ${(await getExternalStorageDirectory())!.path}');
+                var hasStoragePermission = await Permission.storage.isGranted;
+                if (!hasStoragePermission) {
+                  final status = await Permission.storage.request();
+                  hasStoragePermission = status.isGranted;
+                }
+                if (hasStoragePermission) {
+                  print('try iff');
+                  final directory = await getExternalStorageDirectory();
+                  final downloadDirectory = Directory('${directory}/Download');
+                  print('downloadDirectory:${downloadDirectory.path}');
+
+                  if (!await downloadDirectory.exists()) {
+                    await downloadDirectory.create(recursive: true);
+                  }
+
+                  // void _launchURL_files() async =>
+                  //     await canLaunch(url.path) ? await launch(url.path) : throw 'Could not launch ${url.path}';
+                  // _launchURL_files();
+                   await FlutterDownloader.enqueue(
+                      url: url.path,
+                      // headers: {},
+                      // optional: header send with url (auth token etc)
+                      showNotification: true,
+                      openFileFromNotification: true,
+                      // savedDir: (await getExternalStorageDirectory())!.path,
+                      savedDir: downloadDirectory.path,
+                      // savedDir: await _localPath.toString(),
+                      saveInPublicStorage: true,
+                      fileName:
+                          'VisitingCard${DateTime.now().toString().split(' ').first}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}');
+                }
+              } catch (e) {
+                print("error in download au news:: $e");
+              }
+            },
+            // onDownloadStartRequest: (controller, url) async {
+            //   print("onDownloadStart $url");
+            //   final taskId = await FlutterDownloader.enqueue(
+            //     url: url.toString(),
+            //     savedDir: (await getExternalStorageDirectory())!.path,
+            //     showNotification: true, // show download progress in status bar (for Android)
+            //     openFileFromNotification: true, // click on notification to open downloaded file (for Android)
             //   );
-            //
-            //   // then load your initial URL here
-            //   // await _webViewController.loadUrl(url: widget.url);
-            // } catch (e) {
-            //   print(e.toString());
-            // }
-            // _controller.clearCache();
-            // await _controller.evaluateJavascript(source: "window.document.URL;");
-            // print('web page: ${_controller.evaluateJavascript(source: "window.document.URL;")}');
-          },
-          onLoadStop: (InAppWebViewController controller, Uri? url) async {
-            // setState(() {
-            //   this.url = url.toString();
-            // });
-            await controller.evaluateJavascript(source: "window.localStorage.setItem('Item 1', 'localStorage value! hiii')");
-            // await controller.evaluateJavascript(source: "alert(window.localStorage.getItem('Item 1'))");
-            await controller.evaluateJavascript(source: "window.sessionStorage.setItem('Item 2', 'sessionStorage value! hiii')");
-          },
-          onDownloadStartRequest: (controller, downloadStartRequest) async {
-            print("onDownloadStart $url");
-            var hasStoragePermission = await Permission.storage.isGranted;
-            if (!hasStoragePermission) {
-              final status = await Permission.storage.request();
-              hasStoragePermission = status.isGranted;
-            }
-            if (hasStoragePermission) {
-              final taskId = await FlutterDownloader.enqueue(
-                  url: url,
-                  headers: {},
-                  // optional: header send with url (auth token etc)
-                  savedDir: (await getTemporaryDirectory()).path,
-                  saveInPublicStorage: true,
-                  fileName: (await getExternalStorageDirectory())!.path);
-            }
-          },
-          // onDownloadStartRequest: (controller, url) async {
-          //   print("onDownloadStart $url");
-          //   final taskId = await FlutterDownloader.enqueue(
-          //     url: url.toString(),
-          //     savedDir: (await getExternalStorageDirectory())!.path,
-          //     showNotification: true, // show download progress in status bar (for Android)
-          //     openFileFromNotification: true, // click on notification to open downloaded file (for Android)
-          //   );
-          // },
+            // },
 //                       onLoadStop: (controller, url) async {
 //                         if(await _controller.evaluateJavascript(source: "window.document.URL;") != "https://qswappweb.com/resumebuilder/public/featured"){
 //                               // var result = await controller.evaluateJavascript(
@@ -733,152 +782,152 @@ class _EditorPageState extends State<EditorPage> with
 //                           print(result);
 //                         }
 //                       },
-          // onWebViewCreated: (InAppWebViewController controller) {
-          //   webView = controller;
-          // },
-          // onLoadStart: (InAppWebViewController controller, String url) {
-          //
-          // },
-          // onLoadStop: (InAppWebViewController controller, String url) {
-          //
-          // },
-          // onLoadStop: (controller, url) async {
-          //   var html = await controller.evaluateJavascript(
-          //       source: "window.document.getElementsByTagName('head')[0].outerHTML;");
-          //   //   source: "window.document.body.innerText;");
-          //   print("==========start================");
-          //   // catchtext = html;
-          //   print(':$html}');
-          //
-          // },
+            // onWebViewCreated: (InAppWebViewController controller) {
+            //   webView = controller;
+            // },
+            // onLoadStart: (InAppWebViewController controller, String url) {
+            //
+            // },
+            // onLoadStop: (InAppWebViewController controller, String url) {
+            //
+            // },
+            // onLoadStop: (controller, url) async {
+            //   var html = await controller.evaluateJavascript(
+            //       source: "window.document.getElementsByTagName('head')[0].outerHTML;");
+            //   //   source: "window.document.body.innerText;");
+            //   print("==========start================");
+            //   // catchtext = html;
+            //   print(':$html}');
+            //
+            // },
 
-          // onPageCommitVisible: (con,uri){
-          //   print("url ${uri.toString()}");
-          //   con.goBack();
-          // },
-          // onDownloadStartRequest: (controller, url) async {
-          //   print('Permission.storage.status:${await Permission.storage.status}');
-          //   // await checkPermission();
-          //   // print(await checkPermission());
-          //   print("onDownloadStart $url");
-          //   if(await Permission.storage.request().isGranted){
-          //     print('if true');
-          //         final taskId = await FlutterDownloader.enqueue(
-          //           url: 'https:\/\/qswappweb.com\/resumebuilder\/public\/uploads\/user_guide_image\/63b3eed2d1cef.png',
-          //               // 'https://qswappweb.com/resumebuilder/public/featured',
-          //           saveInPublicStorage: true,
-          //           savedDir:
-          //               (await getExternalStorageDirectory())!.path,
-          //           showNotification: true,
-          //           fileName: "Flamingo Order Details",
-          //           // show download progress in status bar (for Android)
-          //           openFileFromNotification:
-          //               true, // click on notification to open downloaded file (for Android)
-          //         );
-          //         print('taskId:$taskId');
-          //       }
-          //   else{
-          //     print('else false');
-          //     checkPermission();
-          //   }
-          //     },
-        ),
-    //     body: WebViewPlus(
-    //       initialUrl: 'https://visitmysite.in/pixie/index.html',
-    //       javascriptMode: JavascriptMode.unrestricted,
-    //       // javascriptChannels: null,
-    // onPageFinished: (String url) {
+            // onPageCommitVisible: (con,uri){
+            //   print("url ${uri.toString()}");
+            //   con.goBack();
+            // },
+            // onDownloadStartRequest: (controller, url) async {
+            //   print('Permission.storage.status:${await Permission.storage.status}');
+            //   // await checkPermission();
+            //   // print(await checkPermission());
+            //   print("onDownloadStart $url");
+            //   if(await Permission.storage.request().isGranted){
+            //     print('if true');
+            //         final taskId = await FlutterDownloader.enqueue(
+            //           url: 'https:\/\/qswappweb.com\/resumebuilder\/public\/uploads\/user_guide_image\/63b3eed2d1cef.png',
+            //               // 'https://qswappweb.com/resumebuilder/public/featured',
+            //           saveInPublicStorage: true,
+            //           savedDir:
+            //               (await getExternalStorageDirectory())!.path,
+            //           showNotification: true,
+            //           fileName: "Flamingo Order Details",
+            //           // show download progress in status bar (for Android)
+            //           openFileFromNotification:
+            //               true, // click on notification to open downloaded file (for Android)
+            //         );
+            //         print('taskId:$taskId');
+            //       }
+            //   else{
+            //     print('else false');
+            //     checkPermission();
+            //   }
+            //     },
+          ),
+          //     body: WebViewPlus(
+          //       initialUrl: 'https://visitmysite.in/pixie/index.html',
+          //       javascriptMode: JavascriptMode.unrestricted,
+          //       // javascriptChannels: null,
+          // onPageFinished: (String url) {
+          //     print('Page finished loading: $url');
+          //     // setState(() {
+          //     //   isLoading = false;
+          //     // });
+          //   },
+          //       onWebViewCreated: (InAppWebViewController webViewController) async{
+          //         _controller = webViewController;
+          //         // _controller!.loadUrl('https://visitmysite.in/pixie/index.html');
+          //         // var localStorageValue = await _controller!.webViewController.loadFile('Phone/Download/IMG_2305.jpg');
+          //         // var localStorageValue = await _controller.runJavascriptReturningResult('window.localStorage.getItem("image")');
+          //         print('localStorageValue:');
+          //         // _controller.settings()
+          //         //     .setDomStorageEnabled(true);
+          //         // WebView webView = (WebView) findViewById(R.id.webView);
+          //         // WebSettings webSettings = webView.getSettings();
+          //         // webSettings.setJavaScriptEnabled(true);
+          //         // webSettings.setDomStorageEnabled(true);
+          //         // webview.getsettings().setdomstorageenabled(true)
+          //         // await _controller.runJavascriptReturningResult( "window.localStorage.setItem('key', 'localStorage value!')");
+          //         // await _controller.runJavascriptReturningResult( "alert(window.localStorage.getItem('key'))");
+          //         // await _controller.runJavascript(
+          //         //     'sessionStorage.setItem("userCode", "000"); sessionStorage.setItem("role", "40");');
+          //       },
+          //     )
+        ));
+    // body: WebView(
+    //   key: UniqueKey(),
+    //   // initialUrl:'https://freshly.luckistore.in/api/privacy_policy',
+    //   initialUrl: 'https://visitmysite.in/pixie/index.html',
+    //   // initialUrl: 'https://visitmysite.in/visitingcard/public/featured',
+    //   javascriptMode: JavascriptMode.unrestricted,
+    //   onPageFinished: (String url) {
     //     print('Page finished loading: $url');
     //     // setState(() {
     //     //   isLoading = false;
     //     // });
     //   },
-    //       onWebViewCreated: (InAppWebViewController webViewController) async{
-    //         _controller = webViewController;
-    //         // _controller!.loadUrl('https://visitmysite.in/pixie/index.html');
-    //         // var localStorageValue = await _controller!.webViewController.loadFile('Phone/Download/IMG_2305.jpg');
-    //         // var localStorageValue = await _controller.runJavascriptReturningResult('window.localStorage.getItem("image")');
-    //         print('localStorageValue:');
-    //         // _controller.settings()
-    //         //     .setDomStorageEnabled(true);
-    //         // WebView webView = (WebView) findViewById(R.id.webView);
-    //         // WebSettings webSettings = webView.getSettings();
-    //         // webSettings.setJavaScriptEnabled(true);
-    //         // webSettings.setDomStorageEnabled(true);
-    //         // webview.getsettings().setdomstorageenabled(true)
-    //         // await _controller.runJavascriptReturningResult( "window.localStorage.setItem('key', 'localStorage value!')");
-    //         // await _controller.runJavascriptReturningResult( "alert(window.localStorage.getItem('key'))");
-    //         // await _controller.runJavascript(
-    //         //     'sessionStorage.setItem("userCode", "000"); sessionStorage.setItem("role", "40");');
-    //       },
-    //     )
-        );
-            // body: WebView(
-            //   key: UniqueKey(),
-            //   // initialUrl:'https://freshly.luckistore.in/api/privacy_policy',
-            //   initialUrl: 'https://visitmysite.in/pixie/index.html',
-            //   // initialUrl: 'https://visitmysite.in/visitingcard/public/featured',
-            //   javascriptMode: JavascriptMode.unrestricted,
-            //   onPageFinished: (String url) {
-            //     print('Page finished loading: $url');
-            //     // setState(() {
-            //     //   isLoading = false;
-            //     // });
-            //   },
-            //   onWebViewCreated: (WebViewController webViewController) async{
-            //     _controller = webViewController;
-            //     var localStorageValue = await _controller.runJavascriptReturningResult('window.localStorage.getItem("image")');
-            //     print('localStorageValue:$localStorageValue');
-            //     // _controller.settings()
-            //     //     .setDomStorageEnabled(true);
-            //     // WebView webView = (WebView) findViewById(R.id.webView);
-            //     // WebSettings webSettings = webView.getSettings();
-            //     // webSettings.setJavaScriptEnabled(true);
-            //     // webSettings.setDomStorageEnabled(true);
-            //     // webview.getsettings().setdomstorageenabled(true)
-            //     // await _controller.runJavascriptReturningResult( "window.localStorage.setItem('key', 'localStorage value!')");
-            //     // await _controller.runJavascriptReturningResult( "alert(window.localStorage.getItem('key'))");
-            //     // await _controller.runJavascript(
-            //     //     'sessionStorage.setItem("userCode", "000"); sessionStorage.setItem("role", "40");');
-            //   },
-            //   // gestureNavigationEnabled: true,
-            //   // gestureRecognizers: Set()
-            //   //   ..add(Factory<VerticalDragGestureRecognizer>(() =>
-            //   //   VerticalDragGestureRecognizer()
-            //   //     ..onDown =
-            //   //         (DragDownDetails dragDownDetails) {
-            //   //       _controller.getScrollY().then((value) {
-            //   //         if (value == 0 &&
-            //   //             dragDownDetails
-            //   //                 .globalPosition.direction <
-            //   //                 1) {
-            //   //           _controller.reload();
-            //   //         }
-            //   //       });
-            //   //     }))
-            //   //   ..add(Factory<LongPressGestureRecognizer>(() => LongPressGestureRecognizer())),
-            //   onWebResourceError: (WebResourceError error) {
-            //     print("WebresourceError occured!");
-            //     // setState(() {
-            //     //   appBarColor = Colors.red;
-            //     //
-            //     // });
-            //   },
-            //   // gestureNavigationEnabled: true,
-            //   // gestureRecognizers: Set()
-            //   //   ..add(Factory<VerticalDragGestureRecognizer>(
-            //   //       () => VerticalDragGestureRecognizer()
-            //   //         ..onDown = (DragDownDetails dragDownDetails) {
-            //   //           _controller.getScrollY().then((value) {
-            //   //             if (value == 0 &&
-            //   //                 dragDownDetails.globalPosition.direction < 1) {
-            //   //               _controller.reload();
-            //   //             }
-            //   //           });
-            //   //         }))
-            //   //   ..add(Factory<LongPressGestureRecognizer>(
-            //   //       () => LongPressGestureRecognizer())),
-            // ));
+    //   onWebViewCreated: (WebViewController webViewController) async{
+    //     _controller = webViewController;
+    //     var localStorageValue = await _controller.runJavascriptReturningResult('window.localStorage.getItem("image")');
+    //     print('localStorageValue:$localStorageValue');
+    //     // _controller.settings()
+    //     //     .setDomStorageEnabled(true);
+    //     // WebView webView = (WebView) findViewById(R.id.webView);
+    //     // WebSettings webSettings = webView.getSettings();
+    //     // webSettings.setJavaScriptEnabled(true);
+    //     // webSettings.setDomStorageEnabled(true);
+    //     // webview.getsettings().setdomstorageenabled(true)
+    //     // await _controller.runJavascriptReturningResult( "window.localStorage.setItem('key', 'localStorage value!')");
+    //     // await _controller.runJavascriptReturningResult( "alert(window.localStorage.getItem('key'))");
+    //     // await _controller.runJavascript(
+    //     //     'sessionStorage.setItem("userCode", "000"); sessionStorage.setItem("role", "40");');
+    //   },
+    //   // gestureNavigationEnabled: true,
+    //   // gestureRecognizers: Set()
+    //   //   ..add(Factory<VerticalDragGestureRecognizer>(() =>
+    //   //   VerticalDragGestureRecognizer()
+    //   //     ..onDown =
+    //   //         (DragDownDetails dragDownDetails) {
+    //   //       _controller.getScrollY().then((value) {
+    //   //         if (value == 0 &&
+    //   //             dragDownDetails
+    //   //                 .globalPosition.direction <
+    //   //                 1) {
+    //   //           _controller.reload();
+    //   //         }
+    //   //       });
+    //   //     }))
+    //   //   ..add(Factory<LongPressGestureRecognizer>(() => LongPressGestureRecognizer())),
+    //   onWebResourceError: (WebResourceError error) {
+    //     print("WebresourceError occured!");
+    //     // setState(() {
+    //     //   appBarColor = Colors.red;
+    //     //
+    //     // });
+    //   },
+    //   // gestureNavigationEnabled: true,
+    //   // gestureRecognizers: Set()
+    //   //   ..add(Factory<VerticalDragGestureRecognizer>(
+    //   //       () => VerticalDragGestureRecognizer()
+    //   //         ..onDown = (DragDownDetails dragDownDetails) {
+    //   //           _controller.getScrollY().then((value) {
+    //   //             if (value == 0 &&
+    //   //                 dragDownDetails.globalPosition.direction < 1) {
+    //   //               _controller.reload();
+    //   //             }
+    //   //           });
+    //   //         }))
+    //   //   ..add(Factory<LongPressGestureRecognizer>(
+    //   //       () => LongPressGestureRecognizer())),
+    // ));
     // );
     // ignore: unnecessary_cast
   }
@@ -886,341 +935,341 @@ class _EditorPageState extends State<EditorPage> with
   @override
   bool get wantKeepAlive => true;
 
-  // WidgetBuilder get _localDialogBuilder2 {
-  //   return (BuildContext context) {
-  //     return GestureDetector(
-  //       onTap: () {
-  //         Navigator.of(context).pop();
-  //       },
-  //       child: Container(
-  //         margin: const EdgeInsets.only(
-  //           top: 80,
-  //         ),
-  //         padding: const EdgeInsets.symmetric(horizontal: 10),
-  //         decoration: const BoxDecoration(
-  //             color: Colors.white,
-  //             borderRadius: BorderRadius.all(Radius.circular(10))),
-  //         child: DefaultTextStyle(
-  //           style: const TextStyle(fontSize: 18, color: Colors.black87),
-  //           child: IntrinsicWidth(
-  //             child: Column(
-  //               mainAxisSize: MainAxisSize.min,
-  //               children: [
-  //                 const SizedBox(
-  //                   height: 10,
-  //                 ),
-  //                 GestureDetector(
-  //                     onTap: () {
-  //                       pickImage2();
-  //                     },
-  //                     child: const Text("Gallery")),
-  //                 const SizedBox(
-  //                   height: 10,
-  //                 ),
-  //                 const Divider(
-  //                   height: 4,
-  //                 ),
-  //                 const SizedBox(
-  //                   height: 10,
-  //                 ),
-  //                 GestureDetector(
-  //                     onTap: () {
-  //                       pickImageC2();
-  //                       //Navigator.of(context).pop();
-  //                     },
-  //                     child: const Text("Camera")),
-  //                 // const SizedBox(
-  //                 //   height: 10,
-  //                 // ),
-  //                 const SizedBox(
-  //                   height: 10,
-  //                 ),
-  //                 // const Divider(
-  //                 //   height: 4,
-  //                 // ),
-  //                 // const SizedBox(
-  //                 //   height: 10,
-  //                 // ),
-  //                 // GestureDetector(
-  //                 //     onTap: () {
-  //                 //       {
-  //                 //         File? file = image;
-  //                 //         // if (file != null) {
-  //                 //         //   Navigator.of(context).push(
-  //                 //         //     MaterialPageRoute(
-  //                 //         //       builder: (context) => AdvancedExample(
-  //                 //         //         selectedImage: file.path,
-  //                 //         //       ),
-  //                 //         //     ),
-  //                 //         //   );
-  //                 //         // }
-  //                 //       }
-  //                 //       //Navigator.of(context).pop();
-  //                 //     },
-  //                 //     child: const Text("Stickers")),
-  //                 // const SizedBox(
-  //                 //   height: 10,
-  //                 // ),
-  //                 // const SizedBox(
-  //                 //   height: 10,
-  //                 // ),
-  //                 // const Divider(
-  //                 //   height: 4,
-  //                 // ),
-  //                 // const SizedBox(
-  //                 //   height: 10,
-  //                 // ),
-  //                 // GestureDetector(
-  //                 //     onTap: () async{
-  //                 //       {
-  //                 //         File? file = image;
-  //                 //         // print('image selected:${image!.path}');
-  //                 //         // final SharedPreferences _prefs = await prefs;
-  //                 //         // var tempImage = '';
-  //                 //         // setState(() {
-  //                 //         //   tempImage = _prefs.setString(AppStrings.ktempImage, image!.path).toString();
-  //                 //         //   print('get image:${_prefs.get(AppStrings.ktempImage)}');
-  //                 //         // });
-  //                 //         if (file != null) {
-  //                 //           Navigator.of(context).push(
-  //                 //             MaterialPageRoute(
-  //                 //               builder: (context) => Effects(
-  //                 //                 selectedImage: file,
-  //                 //                 // selectedImage: _prefs.getString(AppStrings.ktempImage),
-  //                 //               ),
-  //                 //             ),
-  //                 //           );
-  //                 //         }
-  //                 //       }
-  //                 //       //Navigator.of(context).pop();
-  //                 //     },
-  //                 //     child: const Text("Effects")),
-  //                 // const SizedBox(
-  //                 //   height: 10,
-  //                 // ),
-  //                 // const SizedBox(
-  //                 //   height: 10,
-  //                 // ),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-  //     );
-  //   };
-  // }
+// WidgetBuilder get _localDialogBuilder2 {
+//   return (BuildContext context) {
+//     return GestureDetector(
+//       onTap: () {
+//         Navigator.of(context).pop();
+//       },
+//       child: Container(
+//         margin: const EdgeInsets.only(
+//           top: 80,
+//         ),
+//         padding: const EdgeInsets.symmetric(horizontal: 10),
+//         decoration: const BoxDecoration(
+//             color: Colors.white,
+//             borderRadius: BorderRadius.all(Radius.circular(10))),
+//         child: DefaultTextStyle(
+//           style: const TextStyle(fontSize: 18, color: Colors.black87),
+//           child: IntrinsicWidth(
+//             child: Column(
+//               mainAxisSize: MainAxisSize.min,
+//               children: [
+//                 const SizedBox(
+//                   height: 10,
+//                 ),
+//                 GestureDetector(
+//                     onTap: () {
+//                       pickImage2();
+//                     },
+//                     child: const Text("Gallery")),
+//                 const SizedBox(
+//                   height: 10,
+//                 ),
+//                 const Divider(
+//                   height: 4,
+//                 ),
+//                 const SizedBox(
+//                   height: 10,
+//                 ),
+//                 GestureDetector(
+//                     onTap: () {
+//                       pickImageC2();
+//                       //Navigator.of(context).pop();
+//                     },
+//                     child: const Text("Camera")),
+//                 // const SizedBox(
+//                 //   height: 10,
+//                 // ),
+//                 const SizedBox(
+//                   height: 10,
+//                 ),
+//                 // const Divider(
+//                 //   height: 4,
+//                 // ),
+//                 // const SizedBox(
+//                 //   height: 10,
+//                 // ),
+//                 // GestureDetector(
+//                 //     onTap: () {
+//                 //       {
+//                 //         File? file = image;
+//                 //         // if (file != null) {
+//                 //         //   Navigator.of(context).push(
+//                 //         //     MaterialPageRoute(
+//                 //         //       builder: (context) => AdvancedExample(
+//                 //         //         selectedImage: file.path,
+//                 //         //       ),
+//                 //         //     ),
+//                 //         //   );
+//                 //         // }
+//                 //       }
+//                 //       //Navigator.of(context).pop();
+//                 //     },
+//                 //     child: const Text("Stickers")),
+//                 // const SizedBox(
+//                 //   height: 10,
+//                 // ),
+//                 // const SizedBox(
+//                 //   height: 10,
+//                 // ),
+//                 // const Divider(
+//                 //   height: 4,
+//                 // ),
+//                 // const SizedBox(
+//                 //   height: 10,
+//                 // ),
+//                 // GestureDetector(
+//                 //     onTap: () async{
+//                 //       {
+//                 //         File? file = image;
+//                 //         // print('image selected:${image!.path}');
+//                 //         // final SharedPreferences _prefs = await prefs;
+//                 //         // var tempImage = '';
+//                 //         // setState(() {
+//                 //         //   tempImage = _prefs.setString(AppStrings.ktempImage, image!.path).toString();
+//                 //         //   print('get image:${_prefs.get(AppStrings.ktempImage)}');
+//                 //         // });
+//                 //         if (file != null) {
+//                 //           Navigator.of(context).push(
+//                 //             MaterialPageRoute(
+//                 //               builder: (context) => Effects(
+//                 //                 selectedImage: file,
+//                 //                 // selectedImage: _prefs.getString(AppStrings.ktempImage),
+//                 //               ),
+//                 //             ),
+//                 //           );
+//                 //         }
+//                 //       }
+//                 //       //Navigator.of(context).pop();
+//                 //     },
+//                 //     child: const Text("Effects")),
+//                 // const SizedBox(
+//                 //   height: 10,
+//                 // ),
+//                 // const SizedBox(
+//                 //   height: 10,
+//                 // ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   };
+// }
 
-  // WidgetBuilder get _localDialogBuilder {
-  //   return (BuildContext context) {
-  //     return GestureDetector(
-  //       onTap: () {
-  //         Navigator.of(context).pop();
-  //       },
-  //       child: Container(
-  //         margin: const EdgeInsets.only(
-  //           top: 80,
-  //         ),
-  //         padding: const EdgeInsets.symmetric(horizontal: 10),
-  //         decoration: const BoxDecoration(
-  //             color: Colors.white,
-  //             borderRadius: BorderRadius.all(Radius.circular(10))),
-  //         child: DefaultTextStyle(
-  //           style: const TextStyle(fontSize: 18, color: Colors.black87),
-  //           child: IntrinsicWidth(
-  //             child: Column(
-  //               mainAxisSize: MainAxisSize.min,
-  //               children: [
-  //                 const SizedBox(
-  //                   height: 10,
-  //                 ),
-  //                 GestureDetector(
-  //                     onTap: () {
-  //                       addNewDialog2(context);
-  //                     },
-  //                     child: const Text("Text-write")),
-  //                 const SizedBox(
-  //                   height: 10,
-  //                 ),
-  //                 const Divider(
-  //                   height: 4,
-  //                 ),
-  //                 const SizedBox(
-  //                   height: 10,
-  //                 ),
-  //                 GestureDetector(
-  //                     onTap: () {
-  //                       increaseFontSize();
-  //                       //Navigator.of(context).pop();
-  //                     },
-  //                     child: const Text("Text-increase")),
-  //                 const SizedBox(
-  //                   height: 10,
-  //                 ),
-  //                 const SizedBox(
-  //                   height: 10,
-  //                 ),
-  //                 const Divider(
-  //                   height: 4,
-  //                 ),
-  //                 const SizedBox(
-  //                   height: 10,
-  //                 ),
-  //                 GestureDetector(
-  //                     onTap: () {
-  //                       decreaseFontSize();
-  //                       //Navigator.of(context).pop();
-  //                     },
-  //                     child: const Text("Text-decrease")),
-  //                 const SizedBox(
-  //                   height: 10,
-  //                 ),
-  //                 const SizedBox(
-  //                   height: 10,
-  //                 ),
-  //                 const Divider(
-  //                   height: 4,
-  //                 ),
-  //                 const SizedBox(
-  //                   height: 10,
-  //                 ),
-  //                 GestureDetector(
-  //                     onTap: () {
-  //                       showDialog(
-  //                         context: context,
-  //                         builder: (BuildContext context) => AlertDialog(
-  //                           title: const Text(
-  //                             'Change Color',
-  //                           ),
-  //                           actions: <Widget>[
-  //                             SingleChildScrollView(
-  //                               scrollDirection: Axis.horizontal,
-  //                               child: Row(
-  //                                 children: [
-  //                                   ListView.separated(
-  //                                     scrollDirection: Axis.horizontal,
-  //                                     shrinkWrap: true,
-  //                                     itemCount: 20,
-  //                                     separatorBuilder: (_, __) =>
-  //                                         const Divider(),
-  //                                     itemBuilder: (context, int index) {
-  //                                       return Container(
-  //                                         margin: const EdgeInsets.only(
-  //                                             top: 0, left: 10),
-  //                                         height: 30,
-  //                                         width: 30,
-  //                                         child: GestureDetector(
-  //                                             onTap: () => changeTextColor(
-  //                                                 Colors.red.shade50),
-  //                                             child: CircleAvatar(
-  //                                               backgroundColor:
-  //                                                   Colors.red.shade50,
-  //                                             )),
-  //                                       );
-  //                                     },
-  //                                   ),
-  //                                   Container(
-  //                                     margin: const EdgeInsets.only(
-  //                                         top: 0, left: 10),
-  //                                     height: 30,
-  //                                     width: 30,
-  //                                     child: GestureDetector(
-  //                                         onTap: () => changeTextColor(
-  //                                             Colors.yellow.shade50),
-  //                                         child: CircleAvatar(
-  //                                           backgroundColor:
-  //                                               Colors.yellow.shade50,
-  //                                         )),
-  //                                   ),
-  //                                   Container(
-  //                                     margin: const EdgeInsets.only(
-  //                                         top: 0, left: 10),
-  //                                     height: 30,
-  //                                     width: 30,
-  //                                     child: GestureDetector(
-  //                                         onTap: () =>
-  //                                             changeTextColor(Colors.purple),
-  //                                         child: const CircleAvatar(
-  //                                           backgroundColor: Colors.purple,
-  //                                         )),
-  //                                   ),
-  //                                   Container(
-  //                                     margin: const EdgeInsets.only(
-  //                                         top: 0, left: 10),
-  //                                     height: 30,
-  //                                     width: 30,
-  //                                     child: GestureDetector(
-  //                                         onTap: () =>
-  //                                             changeTextColor(Colors.pink),
-  //                                         child: const CircleAvatar(
-  //                                           backgroundColor: Colors.pink,
-  //                                         )),
-  //                                   ),
-  //                                   Container(
-  //                                     margin: const EdgeInsets.only(
-  //                                         top: 0, left: 10),
-  //                                     height: 30,
-  //                                     width: 30,
-  //                                     child: GestureDetector(
-  //                                         onTap: () =>
-  //                                             changeTextColor(Colors.green),
-  //                                         child: const CircleAvatar(
-  //                                           backgroundColor: Colors.green,
-  //                                         )),
-  //                                   ),
-  //                                   Container(
-  //                                     margin: const EdgeInsets.only(
-  //                                         top: 0, left: 10),
-  //                                     height: 30,
-  //                                     width: 30,
-  //                                     child: GestureDetector(
-  //                                         onTap: () =>
-  //                                             changeTextColor(Colors.black),
-  //                                         child: const CircleAvatar(
-  //                                           backgroundColor: Colors.black,
-  //                                         )),
-  //                                   ),
-  //                                   Container(
-  //                                     margin: const EdgeInsets.only(
-  //                                         top: 0, left: 10),
-  //                                     height: 30,
-  //                                     width: 30,
-  //                                     child: GestureDetector(
-  //                                         onTap: () =>
-  //                                             changeTextColor(Colors.blue),
-  //                                         child: const CircleAvatar(
-  //                                           backgroundColor: Colors.blue,
-  //                                         )),
-  //                                   ),
-  //                                   Container(
-  //                                     margin: const EdgeInsets.only(
-  //                                         top: 0, left: 10),
-  //                                     height: 30,
-  //                                     width: 30,
-  //                                     child: GestureDetector(
-  //                                         onTap: () =>
-  //                                             changeTextColor(Colors.red),
-  //                                         child: const CircleAvatar(
-  //                                           backgroundColor: Colors.red,
-  //                                         )),
-  //                                   ),
-  //                                 ],
-  //                               ),
-  //                             )
-  //                           ],
-  //                         ),
-  //                       );
-  //                       //Navigator.of(context).pop();
-  //                     },
-  //                     child: const Text("Text-color")),
-  //                 const SizedBox(
-  //                   height: 10,
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-  //     );
-  //   };
-  // }
+// WidgetBuilder get _localDialogBuilder {
+//   return (BuildContext context) {
+//     return GestureDetector(
+//       onTap: () {
+//         Navigator.of(context).pop();
+//       },
+//       child: Container(
+//         margin: const EdgeInsets.only(
+//           top: 80,
+//         ),
+//         padding: const EdgeInsets.symmetric(horizontal: 10),
+//         decoration: const BoxDecoration(
+//             color: Colors.white,
+//             borderRadius: BorderRadius.all(Radius.circular(10))),
+//         child: DefaultTextStyle(
+//           style: const TextStyle(fontSize: 18, color: Colors.black87),
+//           child: IntrinsicWidth(
+//             child: Column(
+//               mainAxisSize: MainAxisSize.min,
+//               children: [
+//                 const SizedBox(
+//                   height: 10,
+//                 ),
+//                 GestureDetector(
+//                     onTap: () {
+//                       addNewDialog2(context);
+//                     },
+//                     child: const Text("Text-write")),
+//                 const SizedBox(
+//                   height: 10,
+//                 ),
+//                 const Divider(
+//                   height: 4,
+//                 ),
+//                 const SizedBox(
+//                   height: 10,
+//                 ),
+//                 GestureDetector(
+//                     onTap: () {
+//                       increaseFontSize();
+//                       //Navigator.of(context).pop();
+//                     },
+//                     child: const Text("Text-increase")),
+//                 const SizedBox(
+//                   height: 10,
+//                 ),
+//                 const SizedBox(
+//                   height: 10,
+//                 ),
+//                 const Divider(
+//                   height: 4,
+//                 ),
+//                 const SizedBox(
+//                   height: 10,
+//                 ),
+//                 GestureDetector(
+//                     onTap: () {
+//                       decreaseFontSize();
+//                       //Navigator.of(context).pop();
+//                     },
+//                     child: const Text("Text-decrease")),
+//                 const SizedBox(
+//                   height: 10,
+//                 ),
+//                 const SizedBox(
+//                   height: 10,
+//                 ),
+//                 const Divider(
+//                   height: 4,
+//                 ),
+//                 const SizedBox(
+//                   height: 10,
+//                 ),
+//                 GestureDetector(
+//                     onTap: () {
+//                       showDialog(
+//                         context: context,
+//                         builder: (BuildContext context) => AlertDialog(
+//                           title: const Text(
+//                             'Change Color',
+//                           ),
+//                           actions: <Widget>[
+//                             SingleChildScrollView(
+//                               scrollDirection: Axis.horizontal,
+//                               child: Row(
+//                                 children: [
+//                                   ListView.separated(
+//                                     scrollDirection: Axis.horizontal,
+//                                     shrinkWrap: true,
+//                                     itemCount: 20,
+//                                     separatorBuilder: (_, __) =>
+//                                         const Divider(),
+//                                     itemBuilder: (context, int index) {
+//                                       return Container(
+//                                         margin: const EdgeInsets.only(
+//                                             top: 0, left: 10),
+//                                         height: 30,
+//                                         width: 30,
+//                                         child: GestureDetector(
+//                                             onTap: () => changeTextColor(
+//                                                 Colors.red.shade50),
+//                                             child: CircleAvatar(
+//                                               backgroundColor:
+//                                                   Colors.red.shade50,
+//                                             )),
+//                                       );
+//                                     },
+//                                   ),
+//                                   Container(
+//                                     margin: const EdgeInsets.only(
+//                                         top: 0, left: 10),
+//                                     height: 30,
+//                                     width: 30,
+//                                     child: GestureDetector(
+//                                         onTap: () => changeTextColor(
+//                                             Colors.yellow.shade50),
+//                                         child: CircleAvatar(
+//                                           backgroundColor:
+//                                               Colors.yellow.shade50,
+//                                         )),
+//                                   ),
+//                                   Container(
+//                                     margin: const EdgeInsets.only(
+//                                         top: 0, left: 10),
+//                                     height: 30,
+//                                     width: 30,
+//                                     child: GestureDetector(
+//                                         onTap: () =>
+//                                             changeTextColor(Colors.purple),
+//                                         child: const CircleAvatar(
+//                                           backgroundColor: Colors.purple,
+//                                         )),
+//                                   ),
+//                                   Container(
+//                                     margin: const EdgeInsets.only(
+//                                         top: 0, left: 10),
+//                                     height: 30,
+//                                     width: 30,
+//                                     child: GestureDetector(
+//                                         onTap: () =>
+//                                             changeTextColor(Colors.pink),
+//                                         child: const CircleAvatar(
+//                                           backgroundColor: Colors.pink,
+//                                         )),
+//                                   ),
+//                                   Container(
+//                                     margin: const EdgeInsets.only(
+//                                         top: 0, left: 10),
+//                                     height: 30,
+//                                     width: 30,
+//                                     child: GestureDetector(
+//                                         onTap: () =>
+//                                             changeTextColor(Colors.green),
+//                                         child: const CircleAvatar(
+//                                           backgroundColor: Colors.green,
+//                                         )),
+//                                   ),
+//                                   Container(
+//                                     margin: const EdgeInsets.only(
+//                                         top: 0, left: 10),
+//                                     height: 30,
+//                                     width: 30,
+//                                     child: GestureDetector(
+//                                         onTap: () =>
+//                                             changeTextColor(Colors.black),
+//                                         child: const CircleAvatar(
+//                                           backgroundColor: Colors.black,
+//                                         )),
+//                                   ),
+//                                   Container(
+//                                     margin: const EdgeInsets.only(
+//                                         top: 0, left: 10),
+//                                     height: 30,
+//                                     width: 30,
+//                                     child: GestureDetector(
+//                                         onTap: () =>
+//                                             changeTextColor(Colors.blue),
+//                                         child: const CircleAvatar(
+//                                           backgroundColor: Colors.blue,
+//                                         )),
+//                                   ),
+//                                   Container(
+//                                     margin: const EdgeInsets.only(
+//                                         top: 0, left: 10),
+//                                     height: 30,
+//                                     width: 30,
+//                                     child: GestureDetector(
+//                                         onTap: () =>
+//                                             changeTextColor(Colors.red),
+//                                         child: const CircleAvatar(
+//                                           backgroundColor: Colors.red,
+//                                         )),
+//                                   ),
+//                                 ],
+//                               ),
+//                             )
+//                           ],
+//                         ),
+//                       );
+//                       //Navigator.of(context).pop();
+//                     },
+//                     child: const Text("Text-color")),
+//                 const SizedBox(
+//                   height: 10,
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   };
+// }
 }
