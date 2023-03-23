@@ -130,15 +130,19 @@ class _UserGuidePageState extends State<UserGuidePage> {
                     child: Container(
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                           color: AppColors.kLightGrey,
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                                 color: Colors.grey,
                                 blurRadius: 5.0,
                                 offset: Offset(0, 3)),
                           ],
-                          borderRadius: BorderRadius.all(Radius.circular(30))
+                          borderRadius: const BorderRadius.all(Radius.circular(30)),
+                          image: DecorationImage(
+                            image: NetworkImage(item),
+                            fit: BoxFit.fill,
+                          )
                       ),
                       // child: Text(item.toString()),
                     ),

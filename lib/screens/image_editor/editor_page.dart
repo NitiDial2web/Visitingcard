@@ -1,4 +1,7 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:isolate';
+import 'dart:ui';
 // import 'package:webview_flutter/webview_flutter.dart';
 
 import 'package:aligned_dialog/aligned_dialog.dart';
@@ -20,6 +23,7 @@ import 'package:screenshot/screenshot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:visiting_card/main.dart';
 import 'package:visiting_card/screens/image_editor/effects.dart';
 import 'package:visiting_card/screens/image_editor/text_info.dart';
 import 'package:visiting_card/screens/image_editor/utils.dart';
@@ -50,7 +54,7 @@ class _EditorPageState extends State<EditorPage>
 
   // late WebViewController _controller;
   String uri = "https://visitmysite.in/pixie/index.html";
-
+  ReceivePort _port = ReceivePort();
   // WebViewPlusController? _controller;
   // @override
   // void initState(){
@@ -418,6 +422,53 @@ class _EditorPageState extends State<EditorPage>
     super.initState();
 
     WidgetsFlutterBinding.ensureInitialized();
+    FlutterDownloader.initialize(
+        debug: true // optional: set false to disable printing logs to console
+    );
+    _downloadListener();
+  }
+
+  Future<void> downloadFile(String url, [String? filename]) async {
+    var hasStoragePermission = await Permission.storage.isGranted;
+    final dir =
+    await getApplicationDocumentsDirectory();
+//From path_provider package
+    var _localPath = dir.path + filename!;
+    final savedDir = Directory(_localPath);
+    print('savedDir:$_localPath');
+    if (!hasStoragePermission) {
+      final status = await Permission.storage.request();
+      hasStoragePermission = status.isGranted;
+    }
+    if (hasStoragePermission) {
+        await savedDir.create(recursive: true).then((value) async {
+          final taskId = await FlutterDownloader.enqueue(
+              url: url,
+              // headers: {},
+              // optional: header send with url (auth token etc)
+              savedDir: _localPath,
+              showNotification: true,
+              timeout: 300000,
+              // saveInPublicStorage: true,
+              fileName: filename);
+          print('_taskid:$taskId');
+        });
+
+    }
+  }
+
+  _downloadListener() {
+    print('_downloadListener');
+    IsolateNameServer.registerPortWithName(
+        _port.sendPort, 'downloader_send_port');
+    _port.listen((dynamic data) {
+      String id = data[0];
+      DownloadTaskStatus status = data[1];
+      if (status.toString() == "DownloadTaskStatus(3)") {
+        FlutterDownloader.open(taskId: id);
+      }
+    });
+    FlutterDownloader.registerCallback(DownloadClass.callback);
   }
 
   @override
@@ -637,8 +688,8 @@ class _EditorPageState extends State<EditorPage>
             initialUrlRequest: URLRequest(url: Uri.parse(
                 // 'https://pixlr.com/x/')),
                 // 'https://practice.geeksforgeeks.org/courses/complete-interview-preparation?source=google&medium=cpc&device=c&keyword=gfg&matchtype=b&campaignid=18447701680&adgroup=147691667674&gclid=Cj0KCQjwk7ugBhDIARIsAGuvgPZnBxRx5yX-Tu6g8tL2hfZCRp7rM3S49HN3TXNZzTOOaMi_d_8wReQaAnAvEALw_wcB')),
-                // 'https://visitmysite.in/pixie/index.html')),
-    'https://proof.ovh.net/files/10Mb.dat')),
+                'https://visitmysite.in/pixie/index.html')),
+    // 'https://proof.ovh.net/files/10Mb.dat')),
             // 'https://visitmysite.in/visitingcard/public/visiting_card_html/${widget.categoryName}/${widget.image}.html')),
             // initialHeaders: {},
             initialOptions: InAppWebViewGroupOptions(
@@ -647,6 +698,7 @@ class _EditorPageState extends State<EditorPage>
                   //   javaScriptEnabled: true,
                   //   clearCache: false,
                   useOnDownloadStart: true,
+                  useShouldOverrideUrlLoading: true,
                   // useOnLoadResource: true,
                   allowFileAccessFromFileURLs: true,
                   allowUniversalAccessFromFileURLs: true),
@@ -710,45 +762,68 @@ class _EditorPageState extends State<EditorPage>
                   source:
                       "window.sessionStorage.setItem('Item 2', 'sessionStorage value! hiii')");
             },
-            onDownloadStart: (controller, url) async {
-              try {
-                print("onDownloadStart ${url}");
-                // print('path : ${(await getExternalStorageDirectory())!.path}');
-                var hasStoragePermission = await Permission.storage.isGranted;
-                if (!hasStoragePermission) {
-                  final status = await Permission.storage.request();
-                  hasStoragePermission = status.isGranted;
+            shouldOverrideUrlLoading: (controller, navigationAction) async {
+              if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+                // final shouldPerformDownload =
+                //     navigationAction.shouldPerformDownload ?? false;
+                final url = navigationAction.request.url;
+                if ( url != null) {
+                  await downloadFile(url.toString());
+                  return NavigationActionPolicy.ALLOW;
                 }
-                if (hasStoragePermission) {
-                  print('try iff');
-                  final directory = await getExternalStorageDirectory();
-                  final downloadDirectory = Directory('${directory}/Download');
-                  print('downloadDirectory:${downloadDirectory.path}');
-
-                  if (!await downloadDirectory.exists()) {
-                    await downloadDirectory.create(recursive: true);
-                  }
-
-                  // void _launchURL_files() async =>
-                  //     await canLaunch(url.path) ? await launch(url.path) : throw 'Could not launch ${url.path}';
-                  // _launchURL_files();
-                   await FlutterDownloader.enqueue(
-                      url: url.path,
-                      // headers: {},
-                      // optional: header send with url (auth token etc)
-                      showNotification: true,
-                      openFileFromNotification: true,
-                      // savedDir: (await getExternalStorageDirectory())!.path,
-                      savedDir: downloadDirectory.path,
-                      // savedDir: await _localPath.toString(),
-                      saveInPublicStorage: true,
-                      fileName:
-                          'VisitingCard${DateTime.now().toString().split(' ').first}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}');
-                }
-              } catch (e) {
-                print("error in download au news:: $e");
               }
+              return NavigationActionPolicy.ALLOW;
             },
+            onDownloadStart: (controller, url) async {
+              print("onDownloadStart $url");
+              final taskId = await FlutterDownloader.enqueue(
+                url: url.path,
+                savedDir: (await getExternalStorageDirectory())!.path,
+                showNotification: true, // show download progress in status bar (for Android)
+                openFileFromNotification: true, // click on notification to open downloaded file (for Android)
+              );
+            },
+            // onDownloadStart: (controller, downloadStartRequest) async {
+            //   await downloadFile(downloadStartRequest.path,
+            //       'niti_demo_name');
+            //   // try {
+            //   //   print("onDownloadStart ${url}");
+            //   //   // print('path : ${(await getExternalStorageDirectory())!.path}');
+            //   //   var hasStoragePermission = await Permission.storage.isGranted;
+            //   //   if (!hasStoragePermission) {
+            //   //     final status = await Permission.storage.request();
+            //   //     hasStoragePermission = status.isGranted;
+            //   //   }
+            //   //   if (hasStoragePermission) {
+            //   //     print('try iff');
+            //   //     final directory = await getExternalStorageDirectory();
+            //   //     final downloadDirectory = Directory('${directory}/Download');
+            //   //     print('downloadDirectory:${downloadDirectory.path}');
+            //   //
+            //   //     if (!await downloadDirectory.exists()) {
+            //   //       await downloadDirectory.create(recursive: true);
+            //   //     }
+            //   //
+            //   //     // void _launchURL_files() async =>
+            //   //     //     await canLaunch(url.path) ? await launch(url.path) : throw 'Could not launch ${url.path}';
+            //   //     // _launchURL_files();
+            //   //      await FlutterDownloader.enqueue(
+            //   //         url: url.path,
+            //   //         // headers: {},
+            //   //         // optional: header send with url (auth token etc)
+            //   //         showNotification: true,
+            //   //         openFileFromNotification: true,
+            //   //         // savedDir: (await getExternalStorageDirectory())!.path,
+            //   //         savedDir: downloadDirectory.path,
+            //   //         // savedDir: await _localPath.toString(),
+            //   //         saveInPublicStorage: true,
+            //   //         fileName:
+            //   //             'VisitingCard${DateTime.now().toString().split(' ').first}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}');
+            //   //   }
+            //   // } catch (e) {
+            //   //   print("error in download au news:: $e");
+            //   // }
+            // },
             // onDownloadStartRequest: (controller, url) async {
             //   print("onDownloadStart $url");
             //   final taskId = await FlutterDownloader.enqueue(
