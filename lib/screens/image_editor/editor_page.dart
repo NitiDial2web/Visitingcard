@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+// import 'dart:html' as html;
 import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
 // import 'package:webview_flutter/webview_flutter.dart';
 
 import 'package:aligned_dialog/aligned_dialog.dart';
+import 'package:android_path_provider/android_path_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +17,7 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
 
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_downloader_web/image_downloader_web.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
@@ -59,6 +62,7 @@ class _EditorPageState extends State<EditorPage>
   ReceivePort _port = ReceivePort();
   String url = "";
   double progress = 0;
+  late File _imageFile;
   // WebViewPlusController? _controller;
   // @override
   // void initState(){
@@ -405,20 +409,32 @@ class _EditorPageState extends State<EditorPage>
 
   Future<String?> get _localPath async {
     Directory? directory;
+    String? downloadsPath;
     try {
       if (Platform.isIOS) {
         directory = await getApplicationSupportDirectory();
+        downloadsPath = await directory.path;
       } else {
+        print('niti directory found');
+
         // if platform is android
-        directory = Directory('/storage/emulated/0/Download');
-        if (!await directory.exists()) {
+        // directory = Directory('/storage/emulated/0/Download');
+        // directory = await getDownloadsDirectory();
+        downloadsPath = await AndroidPathProvider.downloadsPath;
+        // directory = (await getExternalStorageDirectories(type: StorageDirectory.downloads))!.first;
+        // directory = Directory('/Phone storage/Download');
+        // print('directory:${directory!.path}');
+        print('downloadsPath:$downloadsPath');
+        if (!await directory!.exists()) {
+          print('niti directory not found');
           directory = await getExternalStorageDirectory();
+          downloadsPath = await directory!.path;
         }
       }
     } catch (err, stack) {
       print("Can-not get download folder path");
     }
-    return directory?.path;
+    return downloadsPath;
   }
 
   @override
@@ -426,16 +442,17 @@ class _EditorPageState extends State<EditorPage>
     super.initState();
 
     WidgetsFlutterBinding.ensureInitialized();
-    FlutterDownloader.initialize(
-        debug: true // optional: set false to disable printing logs to console
-    );
-    _downloadListener();
+    // FlutterDownloader.initialize(
+    //     debug: true // optional: set false to disable printing logs to console
+    // );
+    // _downloadListener();
   }
 
   Future<void> downloadFile(String url, [String? filename]) async {
     var hasStoragePermission = await Permission.storage.isGranted;
     final dir =
     await getApplicationDocumentsDirectory();
+    print('dir:$dir');
 //From path_provider package
     var _localPath = dir.path + filename!;
     final savedDir = Directory(_localPath);
@@ -445,7 +462,9 @@ class _EditorPageState extends State<EditorPage>
       hasStoragePermission = status.isGranted;
     }
     if (hasStoragePermission) {
+      print('hasStoragePermission');
         await savedDir.create(recursive: true).then((value) async {
+          print('download start');
           final taskId = await FlutterDownloader.enqueue(
               url: url,
               // headers: {},
@@ -461,18 +480,42 @@ class _EditorPageState extends State<EditorPage>
     }
   }
 
-  _downloadListener() {
-    print('_downloadListener');
-    IsolateNameServer.registerPortWithName(
-        _port.sendPort, 'downloader_send_port');
-    _port.listen((dynamic data) {
-      String id = data[0];
-      DownloadTaskStatus status = data[1];
-      if (status.toString() == "DownloadTaskStatus(3)") {
-        FlutterDownloader.open(taskId: id);
-      }
+  // _downloadListener() {
+  //   print('_downloadListener');
+  //   IsolateNameServer.registerPortWithName(
+  //       _port.sendPort, 'downloader_send_port');
+  //   _port.listen((dynamic data) {
+  //     String id = data[0];
+  //     DownloadTaskStatus status = data[1];
+  //     if (status.toString() == "DownloadTaskStatus(3)") {
+  //       FlutterDownloader.open(taskId: id);
+  //     }
+  //   });
+  //   FlutterDownloader.registerCallback(DownloadClass.callback);
+  // }
+
+  Future<void> downloadImageFile(String url) async {
+    List<int> imageBytes = base64Decode(url);
+
+    // Get the document directory using path_provider package
+    final directory = await _localPath;
+
+    // Create a new file in the directory with a unique name
+    final file = File('${directory}/${DateTime.now().millisecondsSinceEpoch}.png');
+
+    // Write the bytes to the file
+    await file.writeAsBytes(imageBytes);
+
+    setState(() {
+      _imageFile = file;
     });
-    FlutterDownloader.registerCallback(DownloadClass.callback);
+    await _showProgressNotification();
+
+    print('Image downloaded: ${_imageFile.path}');
+    var snackBar = SnackBar(
+      content: Text('File Downloaded: ${file.path}'),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
 //   @override
@@ -1011,21 +1054,115 @@ class _EditorPageState extends State<EditorPage>
 //     // ignore: unnecessary_cast
 //   }
 
+  Future<void> _showProgressNotification() async {
+    const int maxProgress = 5;
+    for (int i = 0; i <= maxProgress; i++) {
+      await Future<void>.delayed(const Duration(seconds: 1), () async {
+        final AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails('progress channel', 'progress channel',
+            channelDescription: 'progress channel description',
+            channelShowBadge: false,
+            importance: Importance.high,
+            priority: Priority.high,
+            onlyAlertOnce: true,
+            showProgress: true,
+            maxProgress: maxProgress,
+            progress: i);
+        final NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+        await flutterLocalNotificationsPlugin.show(
+            0,
+            'Visiting Card',
+            'File Download',
+            platformChannelSpecifics,
+            payload: 'item x');
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return WillPopScope(
+        onWillPop: () async {
+          print('back button11111 : ${await _controller.canGoBack()}');
+          if (await _controller.canGoBack()) {
+            print('niti');
+            _controller.goBack();
+            return true;
+          } else {
+            print('niti else');
+            return false;
+          }
+        },
+      child: Scaffold(
         appBar: AppBar(
-          title: const Text('Inline WebView example app'),
-        ),
+            automaticallyImplyLeading: false,
+            title: const Text('Editor'),
+            leading: IconButton(
+                onPressed: () async {
+                  print('back button : ${await _controller.canGoBack()}');
+                  if (1 == 1) {
+                    print('niti');
+                    // _controller.goBack();
+                    Navigator.pop(context);
+                    // return false;
+                  }
+                  // _controller.goBack();
+                },
+                icon: Icon(Icons.arrow_back)),
+            actions: [
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              //   child: GestureDetector(
+              //     onTap: () async {
+              //       print('dialog');
+              //       print('Download');
+              //       print(
+              //           'url:${await _controller.evaluateJavascript(source: "window.document.URL;")}');
+              //       print(
+              //           'niti hello${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}');
+              //       String html =
+              //       await _controller.evaluateJavascript(
+              //           source: "window.document.body.innerHTML;");
+              //       print(html);
+              //       convert(html,
+              //           "File Name${DateTime.now().toString().split(' ').first}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}");
+              //       var targetPath2 = await _localPath;
+              //       File pdfFile() {
+              //         if (Platform.isIOS) {
+              //           return File(targetPath2.toString() +
+              //               "/" +
+              //               "File Name333" +
+              //               '.pdf'); // for ios
+              //         } else {
+              //           print("aaaaa $targetPath2");
+              //           // File('storage/emulated/0/Download/' + cfData + '.pdf')
+              //           return File(targetPath2.toString() +
+              //               "/" +
+              //               "File Name" +
+              //               '.pdf'); // for android
+              //         }
+              //       }
+              //
+              //       SfPdfViewer.file(pdfFile());
+              //       // generateExampleDocument();
+              //       print('download_successfull..//:');
+              //       // downloadDialog();
+              //       // Navigator.push(context, MaterialPageRoute(builder: (context)=> const AppsStorePage()));
+              //     },
+              //     child: const Icon(Icons.download),
+              //   ),
+              // )
+            ],
+          ),
         body: Container(
           child: Column(
             children: <Widget>[
-              // Container(
-              //   padding: EdgeInsets.all(20.0),
-              //   child: Text("CURRENT URL\n${ (url.length > 50) ? url.substring(0, 50) + "..." : url }"),
-              // ),
-              // (progress != 1.0) ? LinearProgressIndicator(value: progress) : Container(),
+              Container(
+                padding: EdgeInsets.all(20.0),
+                child: Text("CURRENT URL\n${ (url.length > 50) ? url.substring(0, 50) + "..." : url }"),
+              ),
+              (progress != 1.0) ? LinearProgressIndicator(value: progress) : Container(),
               Expanded(
                 child: Container(
                   margin: const EdgeInsets.all(10.0),
@@ -1055,18 +1192,20 @@ class _EditorPageState extends State<EditorPage>
                       _controller = controller;
                     },
     onDownloadStartRequest: (controller, url) async {
+      // var imageBytes = File(await).readAsBytesSync();
                       // await _controller.goForward();
               print('Permission.storage.status:${await Permission.storage.status}');
               // await checkPermission();
               // print(await checkPermission());
-              print("onDownloadStart $url");
+              print("onDownloadStart ${url.url}");
               print('url:${url.url.path}');
               // await WebImageDownloader.downloadImageFromWeb('https://picsum.photos/200');
 
               if(await Permission.storage.request().isGranted){
                 print('if true');
-                var _bytesImage = Base64Decoder().convert('${url.url.path}');
-                // return Image.memory(_bytesImage);
+                String base64Image = url.url.path.split(",").last;
+                downloadImageFile(base64Image);
+                // downloadImageFile('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');
                     // final taskId = await FlutterDownloader.enqueue(
                     //   url: 'https:\/\/qswappweb.com\/resumebuilder\/public\/uploads\/user_guide_image\/63b3eed2d1cef.png',
                     //       // 'https://qswappweb.com/resumebuilder/public/featured',
@@ -1131,23 +1270,6 @@ class _EditorPageState extends State<EditorPage>
               // ),
             ].where((Object o) => o != null).toList(),
           ),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: 0,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.mail),
-              label: 'Item 2',
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Item 3'
-            )
-          ],
         ),
       ),
     );

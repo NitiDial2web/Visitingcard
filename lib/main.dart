@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:visiting_card/screens/splash_screen.dart';
+
+final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 class DownloadClass{
   static void callback(String id,DownloadTaskStatus status, int progress){
@@ -15,10 +18,10 @@ class DownloadClass{
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  FlutterDownloader.initialize(
-      debug: true // optional: set false to disable printing logs to console
-  );
-  FlutterDownloader.registerCallback(DownloadClass.callback);
+  // FlutterDownloader.initialize(
+  //     debug: true // optional: set false to disable printing logs to console
+  // );
+  // FlutterDownloader.registerCallback(DownloadClass.callback);
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarBrightness: Brightness.light,
@@ -29,6 +32,18 @@ void main() async{
     // await AndroidWebStorageManager();
     await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
   }
+  const AndroidInitializationSettings initializationSettingsAndroid =
+  AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  final InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      // onSelectNotification: (String payload) async {
+      //   if (payload != null) {
+      //     debugPrint('notification payload: $payload');
+      //   }
+      // }
+      );
   runApp(const MyApp());
 }
 
