@@ -111,15 +111,15 @@ class _InnerPageState extends State<InnerPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Icon(
+                  children: const [
+                    Icon(
                       Icons.edit,
                       size: 25,
                     ),
-                    const SizedBox(
+                    SizedBox(
                       width: 10,
                     ),
-                    const Text(
+                    Text(
                       'EDIT',
                       style:
                       TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
