@@ -11,7 +11,7 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+// import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:visiting_card/common/AppColors.dart';
 import 'package:visiting_card/screens/image_editor/utils.dart';
 import 'package:visiting_card/screens/settings_page.dart';
@@ -201,29 +201,29 @@ class _EditPageState extends State<EditPage> {
                     'url:${await _controller.evaluateJavascript(source: "window.document.URL;")}');
                 print(
                     'niti hello${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}');
-                String html = await _controller.evaluateJavascript(
-                    source: "window.document.body.innerHTML;");
-                print(html);
-                convert(html,
-                    "File Name${DateTime.now().toString().split(' ').first}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}");
-                var targetPath2 = await _localPath;
-                File pdfFile() {
-                  if (Platform.isIOS) {
-                    return File(targetPath2.toString() +
-                        "/" +
-                        "File Name333" +
-                        '.pdf'); // for ios
-                  } else {
-                    print("aaaaa $targetPath2");
-                    // File('storage/emulated/0/Download/' + cfData + '.pdf')
-                    return File(targetPath2.toString() +
-                        "/" +
-                        "File Name" +
-                        '.pdf'); // for android
-                  }
-                }
-
-                SfPdfViewer.file(pdfFile());
+                // String html = await _controller.evaluateJavascript(
+                //     source: "window.document.body.innerHTML;");
+                // print(html);
+                // convert(html,
+                //     "File Name${DateTime.now().toString().split(' ').first}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}");
+                // var targetPath2 = await _localPath;
+                // File pdfFile() {
+                //   if (Platform.isIOS) {
+                //     return File(targetPath2.toString() +
+                //         "/" +
+                //         "File Name333" +
+                //         '.pdf'); // for ios
+                //   } else {
+                //     print("aaaaa $targetPath2");
+                //     // File('storage/emulated/0/Download/' + cfData + '.pdf')
+                //     return File(targetPath2.toString() +
+                //         "/" +
+                //         "File Name" +
+                //         '.pdf'); // for android
+                //   }
+                // }
+                //
+                // SfPdfViewer.file(pdfFile());
                 // generateExampleDocument();
                 print('download_successfull..//:');
                 // downloadDialog();
