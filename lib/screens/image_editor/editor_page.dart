@@ -1340,6 +1340,12 @@ class _EditorPageState extends State<EditorPage>
               if(await Permission.storage.request().isGranted){
                 print('if true');
                 String base64Image = url.url.path.split(",").last;
+                // List<int> binaryPdf = base64.decode(base64Image);
+                // final directory = await _localPath;
+                //
+                // // Create a new file in the directory with a unique name
+                // final file = File('${directory}/${DateTime.now().millisecondsSinceEpoch}.pdf');
+                // file.writeAsBytesSync(binaryPdf);
                 downloadImageFile(base64Image);
                 // _createPDF();
                 // _convertImageToPDF();
