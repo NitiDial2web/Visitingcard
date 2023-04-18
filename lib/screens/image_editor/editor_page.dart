@@ -1304,6 +1304,7 @@ class _EditorPageState extends State<EditorPage>
                   ),
                   child: InAppWebView(
                     initialUrlRequest: URLRequest(
+                        // url: Uri.parse('https://visitmysite.in/pixie/index.html')
                         url: Uri.parse('https://visitmysite.in/editor/index.html')
                         // url: Uri.parse("https://codepen.io/AaradhyaThakkar/pen/eYLXOMo?editors=0010")
                     ),
@@ -1340,13 +1341,14 @@ class _EditorPageState extends State<EditorPage>
               if(await Permission.storage.request().isGranted){
                 print('if true');
                 String base64Image = url.url.path.split(",").last;
+                print('base64Image: $base64Image');
                 // List<int> binaryPdf = base64.decode(base64Image);
                 // final directory = await _localPath;
                 //
                 // // Create a new file in the directory with a unique name
                 // final file = File('${directory}/${DateTime.now().millisecondsSinceEpoch}.pdf');
                 // file.writeAsBytesSync(binaryPdf);
-                downloadImageFile(base64Image);
+               await downloadImageFile(base64Image);
                 // _createPDF();
                 // _convertImageToPDF();
                 // createPdf(base64Image);
