@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:universal_html/html.dart' as html;
 // import 'dart:html' as html;
@@ -69,6 +70,10 @@ class _EditorPageState extends State<EditorPage>
   String url = "";
   double progress = 0;
   late File _imageFile;
+
+  // bool isStoragePermission = true;
+  // bool isVideosPermission = true;
+  // bool isPhotosPermission = true;
   // final pdf = pw.Document();
   // WebViewPlusController? _controller;
   // @override
@@ -445,10 +450,11 @@ class _EditorPageState extends State<EditorPage>
   }
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
 
     WidgetsFlutterBinding.ensureInitialized();
+
     // FlutterDownloader.initialize(
     //     debug: true // optional: set false to disable printing logs to console
     // );
@@ -1304,13 +1310,17 @@ class _EditorPageState extends State<EditorPage>
                   ),
                   child: InAppWebView(
                     initialUrlRequest: URLRequest(
-                        // url: Uri.parse('https://visitmysite.in/pixie/index.html')
-                        url: Uri.parse('https://visitmysite.in/editor/index.html')
+                        url: Uri.parse('https://visitmysite.in/pixie/index.html')
+                        // url: Uri.parse('https://visitmysite.in/editor/index.html')
                         // url: Uri.parse("https://codepen.io/AaradhyaThakkar/pen/eYLXOMo?editors=0010")
                     ),
                     // initialHeaders: {
                     //
                     // },
+                    //   initialOptions: ChromeSafariBrowserClassOptions(
+                    //       android: AndroidChromeCustomTabsOptions(
+                    //           shareState: CustomTabsShareState.SHARE_STATE_OFF),
+                    //       ios: IOSSafariOptions(barCollapsingEnabled: true))
     initialOptions: InAppWebViewGroupOptions(
               crossPlatform: InAppWebViewOptions(
                   // debuggingEnabled: true,
@@ -1325,20 +1335,35 @@ class _EditorPageState extends State<EditorPage>
                 useHybridComposition: true,
               ),
             ),
-                    onWebViewCreated: (InAppWebViewController controller) {
+                    onWebViewCreated: (InAppWebViewController controller) async{
                       _controller = controller;
+                      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+                      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+                      print('androidInfo.version.sdkInt: ${androidInfo.version.sdkInt}');
+                      print('isVideosPermission: $isVideosPermission');
+                      print('isPhotosPermission: $isPhotosPermission');
+                      print('isStoragePermission: $isStoragePermission');
                     },
     onDownloadStartRequest: (controller, url) async {
+      // DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      // AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      // if (androidInfo.version.sdkInt >= 33) {
+      //   isVideosPermission = await Permission.videos.status.isGranted;
+      //   isPhotosPermission = await Permission.photos.status.isGranted;
+      // } else {
+      //   isStoragePermission = await Permission.storage.status.isGranted;
+      // }
       // var imageBytes = File(await).readAsBytesSync();
                       // await _controller.goForward();
-              print('Permission.storage.status:${await Permission.storage.status}');
+      // print('Permission.storage.status:${await Permission.storage.status}');
+              print('Permission.storage.status:${await isStoragePermission}');
               // await checkPermission();
               // print(await checkPermission());
               print("onDownloadStart ${url.url}");
               print('url:${url.url.path}');
               // await WebImageDownloader.downloadImageFromWeb('https://picsum.photos/200');
-
-              if(await Permission.storage.request().isGranted){
+    // if(await Permission.storage.request().isGranted){
+              if(isStoragePermission && isVideosPermission && isPhotosPermission){
                 print('if true');
                 String base64Image = url.url.path.split(",").last;
                 print('base64Image: $base64Image');

@@ -1,13 +1,18 @@
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:visiting_card/screens/splash_screen.dart';
 
 final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+bool isStoragePermission = true;
+bool isVideosPermission = true;
+bool isPhotosPermission = true;
 
 class DownloadClass{
   static void callback(String id,DownloadTaskStatus status, int progress){
@@ -44,6 +49,19 @@ void main() async{
       //   }
       // }
       );
+
+
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+  // if (androidInfo.version.sdkInt >= 33) {
+  //
+  //   print("Testing version"+androidInfo.version.sdkInt.toString());
+  //   isVideosPermission = await Permission.videos.status.isGranted;
+  //   isPhotosPermission = await Permission.photos.status.isGranted;
+  // } else {
+  //   isStoragePermission = await Permission.storage.status.isGranted;
+  // }
+  // enableFlutterDriverExtension();
   runApp(const MyApp());
 }
 
