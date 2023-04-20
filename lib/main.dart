@@ -53,14 +53,19 @@ void main() async{
 
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-  // if (androidInfo.version.sdkInt >= 33) {
-  //
-  //   print("Testing version"+androidInfo.version.sdkInt.toString());
-  //   isVideosPermission = await Permission.videos.status.isGranted;
-  //   isPhotosPermission = await Permission.photos.status.isGranted;
-  // } else {
-  //   isStoragePermission = await Permission.storage.status.isGranted;
-  // }
+  if(androidInfo.version.sdkInt >= 33 ? (await Permission.videos.status.isGranted && await Permission.photos.status.isGranted) : await Permission.storage.status.isGranted){
+    if (androidInfo.version.sdkInt >= 33) {
+      print("Testing version" + androidInfo.version.sdkInt.toString());
+      isVideosPermission = await Permission.videos.status.isGranted;
+      isPhotosPermission = await Permission.photos.status.isGranted;
+    } else {
+      isStoragePermission = await Permission.storage.status.isGranted;
+    }
+  }
+  else{
+    print(" else Testing version" + androidInfo.version.sdkInt.toString());
+    openAppSettings();
+  }
   // enableFlutterDriverExtension();
   runApp(const MyApp());
 }

@@ -1310,8 +1310,8 @@ class _EditorPageState extends State<EditorPage>
                   ),
                   child: InAppWebView(
                     initialUrlRequest: URLRequest(
-                        url: Uri.parse('https://visitmysite.in/pixie/index.html')
-                        // url: Uri.parse('https://visitmysite.in/editor/index.html')
+                        // url: Uri.parse('https://visitmysite.in/pixie/index.html')
+                        url: Uri.parse('https://visitmysite.in/editor/index.html')
                         // url: Uri.parse("https://codepen.io/AaradhyaThakkar/pen/eYLXOMo?editors=0010")
                     ),
                     // initialHeaders: {
@@ -1343,6 +1343,11 @@ class _EditorPageState extends State<EditorPage>
                       print('isVideosPermission: $isVideosPermission');
                       print('isPhotosPermission: $isPhotosPermission');
                       print('isStoragePermission: $isStoragePermission');
+                    },
+                    onLoadResource: (controller, load){
+                      controller.getUrl();
+                      print('url get; ${controller.getUrl()}');
+                      // LoadedResource(url: controller.getUrl())
                     },
     onDownloadStartRequest: (controller, url) async {
       // DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
