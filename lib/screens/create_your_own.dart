@@ -8,6 +8,7 @@ import 'package:visiting_card/screens/app_store.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:visiting_card/screens/design_create.dart';
 import 'package:visiting_card/screens/image_editor/editor_page.dart';
+import 'package:visiting_card/screens/web.dart';
 
 class CreateYourOwnPage extends StatefulWidget {
   const CreateYourOwnPage({Key? key}) : super(key: key);
@@ -320,7 +321,7 @@ class _Example02Tile extends StatelessWidget {
       child: new InkWell(
         onTap: () {
           print('object');
-          Navigator.push(context, MaterialPageRoute(builder: (context)=> const EditorPage()));
+          Navigator.push(context, MaterialPageRoute(builder: (context)=> Web()));
         },
         child: Padding(
           padding: const EdgeInsets.all(10),

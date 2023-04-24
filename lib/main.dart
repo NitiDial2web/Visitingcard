@@ -23,9 +23,9 @@ class DownloadClass{
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  // FlutterDownloader.initialize(
-  //     debug: true // optional: set false to disable printing logs to console
-  // );
+  await FlutterDownloader.initialize(
+      debug: true // optional: set false to disable printing logs to console
+  );
   // FlutterDownloader.registerCallback(DownloadClass.callback);
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
