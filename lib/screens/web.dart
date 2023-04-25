@@ -37,7 +37,7 @@ class _WebState extends State<Web> {
                     initialUrlRequest: URLRequest(
                         url:
                         // Uri.parse('https://visitmysite.in/pixie/index.html')
-                        Uri.parse('http://ovh.net/files/1Mio.dat')
+                        Uri.parse('https://visitmysite.in/editor/index.html')
                       // url: Uri.parse('https://visitmysite.in/editor/index.html')
                       // url: Uri.parse("https://codepen.io/AaradhyaThakkar/pen/eYLXOMo?editors=0010")
                     ),
@@ -57,7 +57,7 @@ class _WebState extends State<Web> {
                     // onLoadStop: (InAppWebViewController controller, String url) {
                     //
                     // },
-                    onDownloadStart: (controller, url) async {
+                    onDownloadStartRequest: (controller, url) async {
                       print("onDownloadStart $url");
                       final taskId = await FlutterDownloader.enqueue(
                         url: url.toString(),
@@ -65,7 +65,9 @@ class _WebState extends State<Web> {
                         saveInPublicStorage: true,
                         showNotification: true, // show download progress in status bar (for Android)
                         openFileFromNotification: true, // click on notification to open downloaded file (for Android)
-                      );
+                      ).then((value) {
+                        print("complated");
+                      });
                     },
                   ))
             ])),
